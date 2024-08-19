@@ -269,12 +269,14 @@ void MainComponent::buttonClicked(juce::Button* button)
     if (button == &playButton)
     {
         std::cout<< "Play button was clicked " << std::endl;
-        transportSource.start();
+        //transportSource.start();
+        player1.start();
     }
     if (button == &stopButton)
     {
         std::cout<< "Stop button was clicked " << std::endl;
-        transportSource.stop();
+        //transportSource.stop();
+        player1.stop();
     }
     if (button == &loadButton)
     {
@@ -284,7 +286,8 @@ void MainComponent::buttonClicked(juce::Button* button)
             juce::File chosenFile = chooser.getResult();
             if (chosenFile.existsAsFile())
             {
-                loadURL(juce::URL{chosenFile});
+                //loadURL(juce::URL{chosenFile});
+                player1.loadURL(juce::URL{chooser.getResult()});
             }
         });
     }
