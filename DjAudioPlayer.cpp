@@ -63,11 +63,11 @@ void DJAudioPlayer::setPosition(double posInSec)
     
 }
 
-void start()
+void DJAudioPlayer::start()
 {
-    
+    transportSource.start();
 }
-void stop()
+void DJAudioPlayer::stop()
 {
-        
+    transportSource.stop();
 }
