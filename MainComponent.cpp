@@ -221,8 +221,8 @@ MainComponent::~MainComponent()
 //==============================================================================
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
-    phase = 0.0;
-    dphase = 0.0001;
+    //phase = 0.0;
+   // dphase = 0.0001;
     player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
     
 //    formatManager.registerBasicFormats();
@@ -297,28 +297,28 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &volSlider)
     {
-        dphase = volSlider.getValue() * 0.01;
+        //dphase = volSlider.getValue() * 0.01;
     }
     else if (slider == &speedSlider)
     {
-        resampleSource.setResamplingRatio(slider->getValue());
+        //resampleSource.setResamplingRatio(slider->getValue());
     }
 }
 
-void MainComponent::loadURL(juce::URL audioURL)
-{
-    // Create an input stream directly from the URL
-    std::unique_ptr<juce::InputStream> inputStream(audioURL.createInputStream(false));
-
-    if (inputStream != nullptr)
-    {
-        auto* reader = formatManager.createReaderFor(std::move(inputStream));
-        if (reader != nullptr)
-        {
-            std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader, true));
-            transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-            readerSource.reset(newSource.release());
-        }
-    }
-}
+//void MainComponent::loadURL(juce::URL audioURL)
+//{
+//    // Create an input stream directly from the URL
+//    std::unique_ptr<juce::InputStream> inputStream(audioURL.createInputStream(false));
+//
+//    if (inputStream != nullptr)
+//    {
+//        auto* reader = formatManager.createReaderFor(std::move(inputStream));
+//        if (reader != nullptr)
+//        {
+//            std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader, true));
+//            transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+//            readerSource.reset(newSource.release());
+//        }
+//    }
+//}
 

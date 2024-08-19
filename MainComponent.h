@@ -46,21 +46,21 @@ private:
     juce::Slider volSlider;
     juce::Slider speedSlider;
     
-    juce::Random rand;
+    //juce::Random rand;
     
-    double phase;
-    double dphase;
+   // double phase;
+    //double dphase;
     
-    juce::AudioFormatManager formatManager;
+    //juce::AudioFormatManager formatManager;
 
-    std::unique_ptr<juce:: AudioFormatReaderSource> readerSource;
-    
-    juce::AudioTransportSource transportSource;
-    juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
-    
-    
-    void loadURL(juce::URL audioURL);
-    
+//    std::unique_ptr<juce:: AudioFormatReaderSource> readerSource;
+//    
+//    juce::AudioTransportSource transportSource;
+//    juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
+//    
+//    
+//    void loadURL(juce::URL audioURL);
+//    
     DJAudioPlayer player1;
     
     
