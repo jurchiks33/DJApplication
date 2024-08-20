@@ -308,6 +308,11 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
         //resampleSource.setResamplingRatio(slider->getValue());
         player1.setSpeed(slider->getValue());
     }
+    else if (slider == &posSlider)
+    {
+        //resampleSource.setResamplingRatio(slider->getValue());
+        player1.setPosition(slider->getValue());
+    }
 }
 
 //void MainComponent::loadURL(juce::URL audioURL)

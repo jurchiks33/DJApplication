@@ -77,6 +77,18 @@ void DJAudioPlayer::setPosition(double posInSec)
     transportSource.setPosition(posInSec);
 }
 
+void DJAudioPlayer::setPositionRelative(double pos)
+{
+    if (pos < 0 || pos > 1.0)
+    {
+        std::cout << "DJAudioPlayer::setPositionRelative pos should be between 0 and 1" << std::endl;
+    }
+    else {
+        double posInSec = transportSource.getLengthInSeconds() * pos;
+    }
+}
+
+
 void DJAudioPlayer::start()
 {
     transportSource.start();
