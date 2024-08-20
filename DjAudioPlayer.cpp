@@ -64,7 +64,13 @@ void DJAudioPlayer::setGain(double gain)
 }
 void DJAudioPlayer::setSpeed(double ratio)
 {
-    
+    if (ratio < 0 || ratio > 100.0)
+    {
+        std::cout << "DJAudioPlayer::setSpeed ratio should be between 0 and 100" << std::endl;
+    }
+    else {
+        resampleSource.setResamplingRatio(ratio);
+    }
 }
 void DJAudioPlayer::setPosition(double posInSec)
 {

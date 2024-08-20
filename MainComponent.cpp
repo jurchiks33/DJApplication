@@ -298,10 +298,12 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
     if (slider == &volSlider)
     {
         //dphase = volSlider.getValue() * 0.01;
+        player1.setGain(slider->getValue());
     }
     else if (slider == &speedSlider)
     {
         //resampleSource.setResamplingRatio(slider->getValue());
+        player1.setSpeed(slider->getValue());
     }
 }
 
