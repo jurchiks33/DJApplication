@@ -54,7 +54,13 @@ void DJAudioPlayer::loadURL(juce::URL audioURL)
 }
 void DJAudioPlayer::setGain(double gain)
 {
-    
+    if (gain < 0 || gain > 1.0)
+    {
+        std::cout << "DJAudioPlayer::setGain gain should be between 0 and 1" << std::endl;
+    }
+    else {
+        transportSource.setGain(gain);
+    }
 }
 void DJAudioPlayer::setSpeed(double ratio)
 {
