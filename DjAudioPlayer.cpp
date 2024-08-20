@@ -85,6 +85,7 @@ void DJAudioPlayer::setPositionRelative(double pos)
     }
     else {
         double posInSec = transportSource.getLengthInSeconds() * pos;
+        setPosition(posInSec);
     }
 }
 

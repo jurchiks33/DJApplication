@@ -212,6 +212,7 @@ MainComponent::MainComponent()
     posSlider.addListener(this);
     
     volSlider.setRange(0.0, 1.0);
+    posSlider.setRange(0.0, 1.0);
     
 }
 
@@ -311,7 +312,7 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
     else if (slider == &posSlider)
     {
         //resampleSource.setResamplingRatio(slider->getValue());
-        player1.setPosition(slider->getValue());
+        player1.setPositionRelative(slider->getValue());
     }
 }
 
