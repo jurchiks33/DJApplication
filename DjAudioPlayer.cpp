@@ -24,14 +24,16 @@ void DJAudioPlayer::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 {
     formatManager.registerBasicFormats();
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 void DJAudioPlayer::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    transportSource.getNextAudioBlock(bufferToFill);
+    resampleSource.getNextAudioBlock(bufferToFill);
 }
 void DJAudioPlayer::releaseResources()
 {
     transportSource.releaseResources();
+    resampleSource.releaseResources();
 }
 
 void DJAudioPlayer::loadURL(juce::URL audioURL)
