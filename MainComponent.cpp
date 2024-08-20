@@ -202,12 +202,14 @@ MainComponent::MainComponent()
     addAndMakeVisible(loadButton);
     addAndMakeVisible(volSlider);
     addAndMakeVisible(speedSlider);
+    addAndMakeVisible(posSlider);
     
     playButton.addListener(this);
     stopButton.addListener(this);
     loadButton.addListener(this);
     volSlider.addListener(this);
     speedSlider.addListener(this);
+    posSlider.addListener(this);
     
     volSlider.setRange(0.0, 1.0);
     
@@ -256,12 +258,13 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    double rowH = getHeight() / 5;
+    double rowH = getHeight() / 6;
     playButton.setBounds(0, 0, getWidth(), rowH);
     stopButton.setBounds(0, rowH, getWidth(), rowH);
     volSlider.setBounds(0, rowH * 2, getWidth(), rowH);
     speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
-    loadButton.setBounds(0, rowH * 4, getWidth(), rowH);
+    posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
+    loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
 }
 
 void MainComponent::buttonClicked(juce::Button* button)

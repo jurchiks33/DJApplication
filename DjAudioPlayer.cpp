@@ -74,7 +74,7 @@ void DJAudioPlayer::setSpeed(double ratio)
 }
 void DJAudioPlayer::setPosition(double posInSec)
 {
-    
+    transportSource.setPosition(posInSec);
 }
 
 void DJAudioPlayer::start()
