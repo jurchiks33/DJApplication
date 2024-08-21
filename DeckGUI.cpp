@@ -58,3 +58,51 @@ void DeckGUI::resized()
     loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
 
 }
+
+void MainComponent::buttonClicked(juce::Button* button)
+{
+    if (button == &playButton)
+    {
+        std::cout<< "Play button was clicked " << std::endl;
+        //transportSource.start();
+        player1.start();
+    }
+    if (button == &stopButton)
+    {
+        std::cout<< "Stop button was clicked " << std::endl;
+        //transportSource.stop();
+        player1.stop();
+    }
+    if (button == &loadButton)
+    {
+        auto fileChooserFlags = juce::FileBrowserComponent::canSelectFiles;
+        fChooser.launchAsync(fileChooserFlags, [this](const juce::FileChooser& chooser)
+        {
+            juce::File chosenFile = chooser.getResult();
+            if (chosenFile.existsAsFile())
+            {
+                //loadURL(juce::URL{chosenFile});
+                player1.loadURL(juce::URL{chooser.getResult()});
+            }
+        });
+    }
+}
+
+void MainComponent::sliderValueChanged(juce::Slider* slider)
+{
+//    if (slider == &volSlider)
+//    {
+//        //dphase = volSlider.getValue() * 0.01;
+//        player1.setGain(slider->getValue());
+//    }
+//    else if (slider == &speedSlider)
+//    {
+//        //resampleSource.setResamplingRatio(slider->getValue());
+//        player1.setSpeed(slider->getValue());
+//    }
+//    else if (slider == &posSlider)
+//    {
+//        //resampleSource.setResamplingRatio(slider->getValue());
+//        player1.setPositionRelative(slider->getValue());
+//    }
+}
