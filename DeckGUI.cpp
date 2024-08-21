@@ -12,7 +12,7 @@
 #include "DeckGUI.h"
 
 //==============================================================================
-DeckGUI::DeckGUI()
+DeckGUI::DeckGUI(DJAudioPlayer* _player) : player(_player)
 {
     addAndMakeVisible(playButton);
     addAndMakeVisible(stopButton);
