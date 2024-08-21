@@ -20,6 +20,18 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player) : player(_player)
     addAndMakeVisible(volSlider);
     addAndMakeVisible(speedSlider);
     addAndMakeVisible(posSlider);
+    
+    playButton.addListener(this);
+    stopButton.addListener(this);
+    loadButton.addListener(this);
+    
+    volSlider.addListener(this);
+    speedSlider.addListener(this);
+    posSlider.addListener(this);
+    
+    volSlider.setRange(0.0, 1.0);
+    speedSlider.setRange(0.0, 100.0);
+    posSlider.setRange(0.0, 1.0);
 
 }
 
@@ -59,19 +71,19 @@ void DeckGUI::resized()
 
 }
 
-void MainComponent::buttonClicked(juce::Button* button)
+void DeckGUI::buttonClicked(juce::Button* button)
 {
     if (button == &playButton)
     {
         std::cout<< "Play button was clicked " << std::endl;
         //transportSource.start();
-        player1.start();
+        player->start();
     }
     if (button == &stopButton)
     {
         std::cout<< "Stop button was clicked " << std::endl;
         //transportSource.stop();
-        player1.stop();
+        player->stop();
     }
     if (button == &loadButton)
     {
@@ -82,27 +94,28 @@ void MainComponent::buttonClicked(juce::Button* button)
             if (chosenFile.existsAsFile())
             {
                 //loadURL(juce::URL{chosenFile});
-                player1.loadURL(juce::URL{chooser.getResult()});
+                player->loadURL(juce::URL{chooser.getResult()});
             }
         });
     }
 }
 
-void MainComponent::sliderValueChanged(juce::Slider* slider)
+
+void DeckGUI::sliderValueChanged(juce::Slider* slider)
 {
-//    if (slider == &volSlider)
-//    {
-//        //dphase = volSlider.getValue() * 0.01;
-//        player1.setGain(slider->getValue());
-//    }
-//    else if (slider == &speedSlider)
-//    {
-//        //resampleSource.setResamplingRatio(slider->getValue());
-//        player1.setSpeed(slider->getValue());
-//    }
-//    else if (slider == &posSlider)
-//    {
-//        //resampleSource.setResamplingRatio(slider->getValue());
-//        player1.setPositionRelative(slider->getValue());
-//    }
+    if (slider == &volSlider)
+    {
+        //dphase = volSlider.getValue() * 0.01;
+        player->setGain(slider->getValue());
+    }
+    else if (slider == &speedSlider)
+    {
+        //resampleSource.setResamplingRatio(slider->getValue());
+        player->setSpeed(slider->getValue());
+    }
+    else if (slider == &posSlider)
+    {
+        //resampleSource.setResamplingRatio(slider->getValue());
+        player->setPositionRelative(slider->getValue());
+    }
 }

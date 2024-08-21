@@ -46,6 +46,9 @@ private:
     
     DJAudioPlayer* player;
     
+    juce::FileChooser fChooser {"Please select a file..."};  ////TEST
+
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)
 };
