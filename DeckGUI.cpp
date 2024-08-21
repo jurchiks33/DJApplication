@@ -49,7 +49,12 @@ void DeckGUI::paint (juce::Graphics& g)
 
 void DeckGUI::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
+    double rowH = getHeight() / 6;
+    playButton.setBounds(0, 0, getWidth(), rowH);
+    stopButton.setBounds(0, rowH, getWidth(), rowH);
+    volSlider.setBounds(0, rowH * 2, getWidth(), rowH);
+    speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
+    posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
+    loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
 
 }
