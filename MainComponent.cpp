@@ -197,6 +197,11 @@ MainComponent::MainComponent()
         setAudioChannels (0, 2);
     }
     
+    addAndMakeVisible(deckGUI1);
+    
+    addAndMakeVisible(deckGUI2);  //EXPERIMENTAL!!!!!!!!!!!!
+    
+    
 //    addAndMakeVisible(playButton);
 //    addAndMakeVisible(stopButton);
 //    addAndMakeVisible(loadButton);
@@ -266,6 +271,11 @@ void MainComponent::resized()
 //    speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
 //    posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
 //    loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
+    
+    
+    deckGUI1.setBounds(0, 0, getWidth()/2, getHeight());
+    
+    deckGUI2.setBounds(getWidth()/2, 0, getWidth()/2, getHeight());  //EXPERIMENTAL!!!!!!!!!!!!!
 }
 
 void MainComponent::buttonClicked(juce::Button* button)
