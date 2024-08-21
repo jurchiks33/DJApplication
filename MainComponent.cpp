@@ -197,23 +197,23 @@ MainComponent::MainComponent()
         setAudioChannels (0, 2);
     }
     
-    addAndMakeVisible(playButton);
-    addAndMakeVisible(stopButton);
-    addAndMakeVisible(loadButton);
-    addAndMakeVisible(volSlider);
-    addAndMakeVisible(speedSlider);
-    addAndMakeVisible(posSlider);
+//    addAndMakeVisible(playButton);
+//    addAndMakeVisible(stopButton);
+//    addAndMakeVisible(loadButton);
+//    addAndMakeVisible(volSlider);
+//    addAndMakeVisible(speedSlider);
+//    addAndMakeVisible(posSlider);
     
-    playButton.addListener(this);
-    stopButton.addListener(this);
-    loadButton.addListener(this);
-    volSlider.addListener(this);
-    speedSlider.addListener(this);
-    posSlider.addListener(this);
-    
-    volSlider.setRange(0.0, 1.0);
-    posSlider.setRange(0.0, 1.0);
-    
+//    playButton.addListener(this);
+//    stopButton.addListener(this);
+//    loadButton.addListener(this);
+//    volSlider.addListener(this);
+//    speedSlider.addListener(this);
+//    posSlider.addListener(this);
+//    
+//    volSlider.setRange(0.0, 1.0);
+//    posSlider.setRange(0.0, 1.0);
+//    
 }
 
 MainComponent::~MainComponent()
@@ -259,61 +259,61 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    double rowH = getHeight() / 6;
-    playButton.setBounds(0, 0, getWidth(), rowH);
-    stopButton.setBounds(0, rowH, getWidth(), rowH);
-    volSlider.setBounds(0, rowH * 2, getWidth(), rowH);
-    speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
-    posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
-    loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
+//    double rowH = getHeight() / 6;
+//    playButton.setBounds(0, 0, getWidth(), rowH);
+//    stopButton.setBounds(0, rowH, getWidth(), rowH);
+//    volSlider.setBounds(0, rowH * 2, getWidth(), rowH);
+//    speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
+//    posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
+//    loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
 }
 
 void MainComponent::buttonClicked(juce::Button* button)
 {
-    if (button == &playButton)
-    {
-        std::cout<< "Play button was clicked " << std::endl;
-        //transportSource.start();
-        player1.start();
-    }
-    if (button == &stopButton)
-    {
-        std::cout<< "Stop button was clicked " << std::endl;
-        //transportSource.stop();
-        player1.stop();
-    }
-    if (button == &loadButton)
-    {
-        auto fileChooserFlags = juce::FileBrowserComponent::canSelectFiles;
-        fChooser.launchAsync(fileChooserFlags, [this](const juce::FileChooser& chooser)
-        {
-            juce::File chosenFile = chooser.getResult();
-            if (chosenFile.existsAsFile())
-            {
-                //loadURL(juce::URL{chosenFile});
-                player1.loadURL(juce::URL{chooser.getResult()});
-            }
-        });
-    }
+//    if (button == &playButton)
+//    {
+//        std::cout<< "Play button was clicked " << std::endl;
+//        //transportSource.start();
+//        player1.start();
+//    }
+//    if (button == &stopButton)
+//    {
+//        std::cout<< "Stop button was clicked " << std::endl;
+//        //transportSource.stop();
+//        player1.stop();
+//    }
+//    if (button == &loadButton)
+//    {
+//        auto fileChooserFlags = juce::FileBrowserComponent::canSelectFiles;
+//        fChooser.launchAsync(fileChooserFlags, [this](const juce::FileChooser& chooser)
+//        {
+//            juce::File chosenFile = chooser.getResult();
+//            if (chosenFile.existsAsFile())
+//            {
+//                //loadURL(juce::URL{chosenFile});
+//                player1.loadURL(juce::URL{chooser.getResult()});
+//            }
+//        });
+//    }
 }
 
 void MainComponent::sliderValueChanged(juce::Slider* slider)
 {
-    if (slider == &volSlider)
-    {
-        //dphase = volSlider.getValue() * 0.01;
-        player1.setGain(slider->getValue());
-    }
-    else if (slider == &speedSlider)
-    {
-        //resampleSource.setResamplingRatio(slider->getValue());
-        player1.setSpeed(slider->getValue());
-    }
-    else if (slider == &posSlider)
-    {
-        //resampleSource.setResamplingRatio(slider->getValue());
-        player1.setPositionRelative(slider->getValue());
-    }
+//    if (slider == &volSlider)
+//    {
+//        //dphase = volSlider.getValue() * 0.01;
+//        player1.setGain(slider->getValue());
+//    }
+//    else if (slider == &speedSlider)
+//    {
+//        //resampleSource.setResamplingRatio(slider->getValue());
+//        player1.setSpeed(slider->getValue());
+//    }
+//    else if (slider == &posSlider)
+//    {
+//        //resampleSource.setResamplingRatio(slider->getValue());
+//        player1.setPositionRelative(slider->getValue());
+//    }
 }
 
 //void MainComponent::loadURL(juce::URL audioURL)
