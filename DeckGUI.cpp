@@ -14,8 +14,12 @@
 //==============================================================================
 DeckGUI::DeckGUI()
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
+    addAndMakeVisible(playButton);
+    addAndMakeVisible(stopButton);
+    addAndMakeVisible(loadButton);
+    addAndMakeVisible(volSlider);
+    addAndMakeVisible(speedSlider);
+    addAndMakeVisible(posSlider);
 
 }
 
