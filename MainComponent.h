@@ -33,9 +33,9 @@ private:
     juce::AudioThumbnailCache thumbCache{100};
     
     DJAudioPlayer player1;
-    DeckGUI deckGUI1{&player1};
+    DeckGUI deckGUI1{&player1, formatManager, thumbCache};
     DJAudioPlayer player2;
-    DeckGUI deckGUI2{&player2};   //EXPERIMENTAL!!!!!!!!!!!
+    DeckGUI deckGUI2{&player2, formatManager, thumbCache};   //EXPERIMENTAL!!!!!!!!!!!
     
     juce::MixerAudioSource mixerSource;
     

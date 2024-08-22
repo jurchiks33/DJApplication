@@ -12,7 +12,8 @@
 #include "WaveformDisplay.h"
 
 //==============================================================================
-WaveformDisplay::WaveformDisplay()
+WaveformDisplay::WaveformDisplay(juce::AudioFormatManager & formatManagerToUse,
+                                 juce::AudioThumbnailCache & cacheToUse)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
