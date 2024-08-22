@@ -26,5 +26,6 @@ public:
     void resized() override;
 
 private:
+    juce::AudioThumbnail audioThumb;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformDisplay)
 };
