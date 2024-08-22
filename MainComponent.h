@@ -1,3 +1,4 @@
+//MainComponent.h
 #pragma once
 
 #include <JuceHeader.h>
@@ -35,34 +36,7 @@ public:
 
 private:
     //==============================================================================
-    // Your private member variables go here...
     
-   // juce::FileChooser fChooser{"Select a file..."};
-    
-//    juce::TextButton playButton{"PLAY"};
-//    juce::TextButton stopButton{"STOP"};
-//    juce::TextButton loadButton{"LOAD"};
-//    
-//    
-//    juce::Slider volSlider;
-//    juce::Slider speedSlider;
-//    juce::Slider posSlider;
-    
-    //juce::Random rand;
-    
-   // double phase;
-    //double dphase;
-    
-    //juce::AudioFormatManager formatManager;
-
-//    std::unique_ptr<juce:: AudioFormatReaderSource> readerSource;
-//    
-//    juce::AudioTransportSource transportSource;
-//    juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
-//    
-//    
-//    void loadURL(juce::URL audioURL);
-//    
     DJAudioPlayer player1;
     DeckGUI deckGUI1{&player1};
     DJAudioPlayer player2;

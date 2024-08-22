@@ -1,12 +1,4 @@
-/*
-  ==============================================================================
-
-    DjAudioPlayer.h
-    Created: 14 Aug 2024 10:07:23am
-    Author:  Juris Slisans
-
-  ==============================================================================
-*/
+//DjAudioPlayer.h
 
 #pragma once
 
@@ -37,7 +29,6 @@ private:
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
-    
 };
 
 

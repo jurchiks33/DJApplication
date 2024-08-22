@@ -1,35 +1,29 @@
-/*
-  ==============================================================================
-
-    DjAudioPlayer.cpp
-    Created: 14 Aug 2024 10:07:23am
-    Author:  Juris Slisans
-
-  ==============================================================================
-*/
+//DjAudioPlayer.cpp
 
 #include "DjAudioPlayer.h"
 
 DJAudioPlayer::DJAudioPlayer()
 {
-    
+    formatManager.registerBasicFormats();
 }
+
 DJAudioPlayer::~DJAudioPlayer()
 {
-    
+    // Any necessary cleanup
 }
 
 //==============================================================================
-void DJAudioPlayer::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
+void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-    formatManager.registerBasicFormats();
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
     resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
-void DJAudioPlayer::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
+
+void DJAudioPlayer::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     resampleSource.getNextAudioBlock(bufferToFill);
 }
+
 void DJAudioPlayer::releaseResources()
 {
     transportSource.releaseResources();
@@ -38,7 +32,7 @@ void DJAudioPlayer::releaseResources()
 
 void DJAudioPlayer::loadURL(juce::URL audioURL)
 {
-    // Create an input stream directly from the URL
+    // Create an input stream directly from the URL without using InputStreamOptions
     std::unique_ptr<juce::InputStream> inputStream(audioURL.createInputStream(false));
 
     if (inputStream != nullptr)
@@ -52,6 +46,9 @@ void DJAudioPlayer::loadURL(juce::URL audioURL)
         }
     }
 }
+
+
+
 void DJAudioPlayer::setGain(double gain)
 {
     if (gain < 0 || gain > 1.0)
@@ -62,6 +59,7 @@ void DJAudioPlayer::setGain(double gain)
         transportSource.setGain(gain);
     }
 }
+
 void DJAudioPlayer::setSpeed(double ratio)
 {
     if (ratio < 0 || ratio > 100.0)
@@ -72,6 +70,7 @@ void DJAudioPlayer::setSpeed(double ratio)
         resampleSource.setResamplingRatio(ratio);
     }
 }
+
 void DJAudioPlayer::setPosition(double posInSec)
 {
     transportSource.setPosition(posInSec);
@@ -89,11 +88,11 @@ void DJAudioPlayer::setPositionRelative(double pos)
     }
 }
 
-
 void DJAudioPlayer::start()
 {
     transportSource.start();
 }
+
 void DJAudioPlayer::stop()
 {
     transportSource.stop();
