@@ -73,14 +73,4 @@ void MainComponent::resized()
 }
 
 
-void MainComponent::buttonClicked(juce::Button* button)
-{
-
-}
-
-void MainComponent::sliderValueChanged(juce::Slider* slider)
-{
-
-}
-
 
