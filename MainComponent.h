@@ -29,6 +29,9 @@ public:
 private:
     //==============================================================================
     
+    juce::AudioFormatManager formatManager;
+    juce::AudioThumbnailCache thumbCache{100};
+    
     DJAudioPlayer player1;
     DeckGUI deckGUI1{&player1};
     DJAudioPlayer player2;
