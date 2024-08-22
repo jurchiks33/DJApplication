@@ -37,9 +37,9 @@ void WaveformDisplay::paint (juce::Graphics& g)
     g.setColour (juce::Colours::grey);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
-    g.setColour (juce::Colours::white);
-    g.setFont (juce::FontOptions (14.0f));
-    g.drawText ("WaveformDisplay", getLocalBounds(),
+    g.setColour (juce::Colours::orange);
+    g.setFont (juce::FontOptions (20.0f));
+    g.drawText ("File not loaded...", getLocalBounds(),
                 juce::Justification::centred, true);   // draw some placeholder text
 }
 

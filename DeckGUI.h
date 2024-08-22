@@ -4,6 +4,8 @@
 
 #include <JuceHeader.h>
 #include "DjAudioPlayer.h"
+#include "WaveformDisplay.h"
+
 
 //==============================================================================
 /*
@@ -41,6 +43,9 @@ private:
     juce::Slider posSlider;
     
     DJAudioPlayer* player;
+    
+    WaveformDisplay waveformDisplay;
+    
     
     juce::FileChooser fChooser {"Please select a file..."};  ////TEST
 
