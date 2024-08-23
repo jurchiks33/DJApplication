@@ -44,12 +44,12 @@ void WaveformDisplay::paint (juce::Graphics& g)
     {
         
     }
-    else {
-        
+    else 
+    {
+        g.setFont (juce::FontOptions (20.0f));
+        g.drawText ("File not loaded...", getLocalBounds(),
+                    juce::Justification::centred, true);   // draw some placeholder text
     }
-    g.setFont (juce::FontOptions (20.0f));
-    g.drawText ("File not loaded...", getLocalBounds(),
-                juce::Justification::centred, true);   // draw some placeholder text
 }
 
 void WaveformDisplay::resized()
