@@ -42,7 +42,13 @@ void WaveformDisplay::paint (juce::Graphics& g)
     g.setColour (juce::Colours::orange);
     if(fileLoaded)
     {
-        
+        audioThumb.drawChannel(g,
+                               getLocalBounds(),
+                               0,
+                               audioThumb.getTotalLength(),
+                               0,
+                               1.0f
+                               );
     }
     else 
     {
