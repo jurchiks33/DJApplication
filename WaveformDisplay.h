@@ -24,6 +24,8 @@ public:
 
     void paint (juce::Graphics&) override;
     void resized() override;
+    
+    void loadURL(juce::URL audioURL);
 
 private:
     juce::AudioThumbnail audioThumb;
