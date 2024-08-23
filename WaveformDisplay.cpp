@@ -55,4 +55,6 @@ void WaveformDisplay::resized()
 void WaveformDisplay::loadURL(juce::URL audioURL)
 {
     std::cout << "wfd:loadURL" << std::endl;
+    
+    
 }
