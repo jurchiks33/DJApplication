@@ -29,5 +29,7 @@ public:
 
 private:
     juce::AudioThumbnail audioThumb;
+    bool fileLoaded;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformDisplay)
 };
