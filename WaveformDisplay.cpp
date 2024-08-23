@@ -51,3 +51,8 @@ void WaveformDisplay::resized()
     // components that your component contains..
 
 }
+
+void WaveformDisplay::loadURL(juce::URL audioURL)
+{
+    std::cout << "wfd:loadURL" << std::endl;
+}
