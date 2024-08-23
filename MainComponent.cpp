@@ -21,6 +21,9 @@ MainComponent::MainComponent()
     
     addAndMakeVisible(deckGUI1);  // Add the first DeckGUI
     addAndMakeVisible(deckGUI2);  // Add the second DeckGUI
+    
+    formatManager.registerBasicFormats();
+
 }
 
 
