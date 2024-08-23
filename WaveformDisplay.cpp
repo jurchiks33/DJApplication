@@ -57,5 +57,12 @@ void WaveformDisplay::loadURL(juce::URL audioURL)
     std::cout << "wfd:loadURL" << std::endl;
     
     audioThumb.clear();
-    audioThumb.setSource(new juce::URLInputSource(audioURL));
+    bool loaded = audioThumb.setSource(new juce::URLInputSource(audioURL));
+    if (loaded)
+    {
+        std::cout << "wfd:loaded!" << std::endl;
+    }
+    else {
+        std::cout << "wfd: not loaded!" << std::endl;
+    }
 }
