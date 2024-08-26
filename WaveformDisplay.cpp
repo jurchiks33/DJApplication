@@ -88,3 +88,8 @@ void WaveformDisplay::changeListenerCallback (juce::ChangeBroadcaster *source)
 
     repaint();
 }
+
+void WaveformDisplay::setPositionRelative(double pos)
+{
+    
+}
