@@ -5,7 +5,7 @@
 DJAudioPlayer::DJAudioPlayer(juce::AudioFormatManager& _formatManager)
 : formatManager(_formatManager)
 {
-    formatManager.registerBasicFormats();
+    //formatManager.registerBasicFormats();
 }
 
 DJAudioPlayer::~DJAudioPlayer()
