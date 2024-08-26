@@ -26,7 +26,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     
-    void changeListenerCallBack (juce::ChangeBroadcaster *source) override;
+    void changeListenerCallback (juce::ChangeBroadcaster *source) override;
     
     void loadURL(juce::URL audioURL);
 
