@@ -11,6 +11,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <vector>
+#include <string>
 
 //==============================================================================
 /*
@@ -27,6 +29,8 @@ public:
 private:
     
     juce::TableListBox tableComponent;
+    std::vector<std::string> trackTitles;
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaylistComponent)
 };

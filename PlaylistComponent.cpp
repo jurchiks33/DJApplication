@@ -16,8 +16,11 @@ PlaylistComponent::PlaylistComponent()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
-    
     //tableComponent.getHeader().addColumn("Track title", 0, 400);
+    
+    trackTitles.push_back("Track 1");
+    trackTitles.push_back("Track 2");
+    
     tableComponent.getHeader().addColumn("Track title", 1, 400, 50, -1, juce::TableHeaderComponent::visible);
     
     tableComponent.getHeader().addColumn("Artist", 2, 400, 50, -1, juce::TableHeaderComponent::visible);  /// EXPERIMENTAL!!
