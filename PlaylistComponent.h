@@ -17,7 +17,8 @@
 //==============================================================================
 /*
 */
-class PlaylistComponent  : public juce::Component
+class PlaylistComponent  : public juce::Component,
+                           public juce:: TableListBoxModel
 {
 public:
     PlaylistComponent();
@@ -25,6 +26,14 @@ public:
 
     void paint (juce::Graphics&) override;
     void resized() override;
+    
+    int getNumRows () override;
+    
+    void paintRowBackground (juce::Graphics &,
+                             int rowNumber,
+                             int width,
+                             int height,
+                             bool rowIsSelected) override;
 
 private:
     
