@@ -24,6 +24,8 @@ PlaylistComponent::PlaylistComponent()
     tableComponent.getHeader().addColumn("Track title", 1, 400, 50, -1, juce::TableHeaderComponent::visible);
     
     tableComponent.getHeader().addColumn("Artist", 2, 400, 50, -1, juce::TableHeaderComponent::visible);  /// EXPERIMENTAL!!
+    
+    tableComponent.setModel(this);
 
     
     addAndMakeVisible(tableComponent);
@@ -71,11 +73,17 @@ void PlaylistComponent::paintRowBackground (juce::Graphics &,
                          int rowNumber,
                          int width,
                          int height,
-                         bool rowIsSelected) override;
+                         bool rowIsSelected)
+{
+    
+}
 
 void PlaylistComponent::paintCell (juce::Graphics &,
                 int rowNumber,
                 int columnId,
                 int width,
                 int height,
-                bool rowIsSelected) override;
+                bool rowIsSelected)
+{
+    
+}
