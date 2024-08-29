@@ -34,6 +34,13 @@ public:
                              int width,
                              int height,
                              bool rowIsSelected) override;
+    
+    void paintCell (juce::Graphics &,
+                    int rowNumber,
+                    int columnId,
+                    int width,
+                    int height,
+                    bool rowIsSelected) override;
 
 private:
     
