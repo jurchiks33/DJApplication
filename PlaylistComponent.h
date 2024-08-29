@@ -2,8 +2,6 @@
   ==============================================================================
 
     PlaylistComponent.h
-    Created: 27 Aug 2024 1:07:50pm
-    Author:  Juris Slisans
 
   ==============================================================================
 */
@@ -42,10 +40,10 @@ public:
                     int height,
                     bool rowIsSelected) override;
 
-    Component* refreshComponentForCell (int rowNumber,
+    juce::Component* refreshComponentForCell (int rowNumber,
                                         int columnId,
                                         bool isRowSelected,
-                                        Component *existingComponentToUpdate) override;
+                                        juce::Component *existingComponentToUpdate) override;
     
 private:
     

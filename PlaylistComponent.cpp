@@ -2,8 +2,6 @@
   ==============================================================================
 
     PlaylistComponent.cpp
-    Created: 27 Aug 2024 1:07:50pm
-    Author:  Juris Slisans
 
   ==============================================================================
 */
@@ -26,6 +24,8 @@ PlaylistComponent::PlaylistComponent()
     trackTitles.push_back("Track 6");
     
     tableComponent.getHeader().addColumn("Track title", 1, 400, 50, -1, juce::TableHeaderComponent::visible);
+    tableComponent.getHeader().addColumn("", 2, 200, 50, -1, juce::TableHeaderComponent::visible); //experimental 
+    
     tableComponent.setModel(this);
 
     
@@ -103,7 +103,45 @@ void PlaylistComponent::paintCell (juce::Graphics & g,
 juce::Component* PlaylistComponent::refreshComponentForCell (int rowNumber,
                                     int columnId,
                                     bool isRowSelected,
-                                    Component *existingComponentToUpdate)
+                                    juce::Component *existingComponentToUpdate)
 {
+    if (columnId == 2)
+    {
+        if (existingComponentToUpdate == nullptr)
+        {
+            existingComponentToUpdate = new juce::TextButton{"Play"};
+        }
+    }
     return existingComponentToUpdate;
+    
 }
+
+//juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber,
+//                                                           int columnId,
+//                                                           bool isRowSelected,
+//                                                           Component* existingComponentToUpdate)
+//{
+//    if (columnId == 2)  // Ensure the correct column ID is used for the play button
+//    {
+//        // Check if the component needs to be created
+//        if (existingComponentToUpdate == nullptr)
+//        {
+//            // Create a new button if not already existing
+//            auto* playButton = new juce::TextButton{"Play"};
+//            playButton->onClick = [this, rowNumber] {
+//                // Implement button click logic here (e.g., play the track)
+//                std::cout << "Play button clicked for row " << rowNumber << std::endl;
+//            };
+//            existingComponentToUpdate = playButton;
+//        }
+//    }
+//    else
+//    {
+//        // If the column ID doesn't match, ensure the existing component is removed
+//        delete existingComponentToUpdate;
+//        existingComponentToUpdate = nullptr;
+//    }
+//
+//    return existingComponentToUpdate;
+//}
+
