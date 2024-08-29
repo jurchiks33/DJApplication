@@ -69,13 +69,19 @@ int PlaylistComponent::getNumRows ()
     return trackTitles.size();
 }
 
-void PlaylistComponent::paintRowBackground (juce::Graphics &,
+void PlaylistComponent::paintRowBackground (juce::Graphics & g,
                          int rowNumber,
                          int width,
                          int height,
                          bool rowIsSelected)
 {
-    
+    if (rowIsSelected)
+    {
+        g.fillAll(juce::Colours::orange);
+    }
+    else{
+        g.fillAll(juce::Colours::darkgrey);
+    }
 }
 
 void PlaylistComponent::paintCell (juce::Graphics &,
