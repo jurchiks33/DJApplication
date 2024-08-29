@@ -61,3 +61,21 @@ void PlaylistComponent::resized()
     tableComponent.setBounds(0, 0, getWidth(), getHeight());
 
 }
+
+int PlaylistComponent::getNumRows ()
+{
+    return trackTitles.size();
+}
+
+void PlaylistComponent::paintRowBackground (juce::Graphics &,
+                         int rowNumber,
+                         int width,
+                         int height,
+                         bool rowIsSelected) override;
+
+void PlaylistComponent::paintCell (juce::Graphics &,
+                int rowNumber,
+                int columnId,
+                int width,
+                int height,
+                bool rowIsSelected) override;
