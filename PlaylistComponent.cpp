@@ -110,6 +110,9 @@ juce::Component* PlaylistComponent::refreshComponentForCell (int rowNumber,
         if (existingComponentToUpdate == nullptr)
         {
             juce::TextButton* btn = new juce::TextButton{"Play"};
+            juce::String id{std::to_string(rowNumber)};
+            btn->setComponentID(id);
+            
             btn->addListener(this);
             existingComponentToUpdate = btn;
         }
@@ -121,6 +124,6 @@ juce::Component* PlaylistComponent::refreshComponentForCell (int rowNumber,
 
 void PlaylistComponent::buttonClicked(juce::Button* button)
 {
-    std::cout << "PlaylistComponent::buttonClicked" << std::endl;
+    std::cout << "PlaylistComponent::buttonClicked" << button->getComponentID() << std::endl;
 }
 
