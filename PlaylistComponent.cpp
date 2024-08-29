@@ -98,3 +98,12 @@ void PlaylistComponent::paintCell (juce::Graphics & g,
                 juce::Justification::centredLeft,
                 true);
 }
+
+
+juce::Component* PlaylistComponent::refreshComponentForCell (int rowNumber,
+                                    int columnId,
+                                    bool isRowSelected,
+                                    Component *existingComponentToUpdate)
+{
+    return existingComponentToUpdate;
+}

@@ -42,6 +42,11 @@ public:
                     int height,
                     bool rowIsSelected) override;
 
+    Component* refreshComponentForCell (int rowNumber,
+                                        int columnId,
+                                        bool isRowSelected,
+                                        Component *existingComponentToUpdate) override;
+    
 private:
     
     juce::TableListBox tableComponent;
