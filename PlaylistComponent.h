@@ -16,7 +16,8 @@
 /*
 */
 class PlaylistComponent  : public juce::Component,
-                           public juce:: TableListBoxModel
+                           public juce:: TableListBoxModel,
+                           public juce::Button::Listener
 {
 public:
     PlaylistComponent();
@@ -40,10 +41,12 @@ public:
                     int height,
                     bool rowIsSelected) override;
 
-    juce::Component* refreshComponentForCell (int rowNumber,
+    Component* refreshComponentForCell (int rowNumber,
                                         int columnId,
                                         bool isRowSelected,
-                                        juce::Component *existingComponentToUpdate) override;
+                                        Component *existingComponentToUpdate) override;
+    
+    void buttonClicked(juce::Button* button) override;
     
 private:
     

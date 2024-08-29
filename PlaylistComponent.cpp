@@ -145,3 +145,8 @@ juce::Component* PlaylistComponent::refreshComponentForCell (int rowNumber,
 //    return existingComponentToUpdate;
 //}
 
+void PlaylistComponent::buttonClicked(juce::Button* button)
+{
+    
+}
+
