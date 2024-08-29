@@ -109,44 +109,18 @@ juce::Component* PlaylistComponent::refreshComponentForCell (int rowNumber,
     {
         if (existingComponentToUpdate == nullptr)
         {
-            existingComponentToUpdate = new juce::TextButton{"Play"};
+            juce::TextButton* btn = new juce::TextButton{"Play"};
+            btn->addListener(this);
+            existingComponentToUpdate = btn;
         }
     }
     return existingComponentToUpdate;
     
 }
 
-//juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber,
-//                                                           int columnId,
-//                                                           bool isRowSelected,
-//                                                           Component* existingComponentToUpdate)
-//{
-//    if (columnId == 2)  // Ensure the correct column ID is used for the play button
-//    {
-//        // Check if the component needs to be created
-//        if (existingComponentToUpdate == nullptr)
-//        {
-//            // Create a new button if not already existing
-//            auto* playButton = new juce::TextButton{"Play"};
-//            playButton->onClick = [this, rowNumber] {
-//                // Implement button click logic here (e.g., play the track)
-//                std::cout << "Play button clicked for row " << rowNumber << std::endl;
-//            };
-//            existingComponentToUpdate = playButton;
-//        }
-//    }
-//    else
-//    {
-//        // If the column ID doesn't match, ensure the existing component is removed
-//        delete existingComponentToUpdate;
-//        existingComponentToUpdate = nullptr;
-//    }
-//
-//    return existingComponentToUpdate;
-//}
 
 void PlaylistComponent::buttonClicked(juce::Button* button)
 {
-    
+    std::cout << "PlaylistComponent::buttonClicked" << std::endl;
 }
 
