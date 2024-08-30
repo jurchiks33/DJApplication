@@ -63,3 +63,20 @@ void EqualizerComponent::resized()
     midSlider.setBounds(area.removeFromLeft(getWidth() / 2));
     highSlider.setBounds(area);
 }
+
+void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
+{
+    //slider handling for equalizer
+    if (slider == &lowSlider)
+    {
+        //place for low frequency slider
+    }
+    else if (slider == &midSlider)
+    {
+        //place for middle frequency slider
+    }
+    else if (slider == &highSlider)
+    {
+        // place for high frequency slider
+    }
+}
