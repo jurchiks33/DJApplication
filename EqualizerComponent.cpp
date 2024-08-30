@@ -10,7 +10,8 @@
 #include "EqualizerComponent.h"
 
 //==============================================================================
-EqualizerComponent::EqualizerComponent()
+EqualizerComponent::EqualizerComponent() :
+bypassButton("Bypass"), resetButton("Reset")
 {
     // setting up low slider
     lowSlider.setSliderStyle(juce::Slider::LinearVertical);
@@ -38,6 +39,12 @@ EqualizerComponent::EqualizerComponent()
     highSlider.setName("High");
     highSlider.addListener(this);
     addAndMakeVisible(highSlider);
+    
+    //Set round buttons
+    bypassButton.setClickingTogglesState(true);
+    bypassButton.setButtonText("Bypass");
+    bypassButton.addListener(this);
+    addAndMakeVisible(resetButton);
 
 }
 
@@ -59,6 +66,8 @@ void EqualizerComponent::paint (juce::Graphics& g)
 void EqualizerComponent::resized()
 {
     auto area = getLocalBounds();
+    int sliderWidth = area.getWidth() / 5;      // Split area in a 5 parts
+    
     lowSlider.setBounds(area.removeFromLeft(getWidth() / 3));
     midSlider.setBounds(area.removeFromLeft(getWidth() / 2));
     highSlider.setBounds(area);
