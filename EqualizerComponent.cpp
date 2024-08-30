@@ -58,5 +58,8 @@ void EqualizerComponent::paint (juce::Graphics& g)
 
 void EqualizerComponent::resized()
 {
-
+    auto area = getLocalBounds();
+    lowSlider.setBounds(area.removeFromLeft(getWidth() / 3));
+    midSlider.setBounds(area.removeFromLeft(getWidth() / 2));
+    highSlider.setBounds(area);
 }
