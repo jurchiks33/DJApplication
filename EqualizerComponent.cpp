@@ -12,8 +12,18 @@
 //==============================================================================
 EqualizerComponent::EqualizerComponent()
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
+    // setting up low slider
+    lowSlider.setSliderStyle(juce::Slider::LinearVertical);
+    lowSlider.setRange(-12.0, 12.0);
+    lowSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    lowSlider.setValue(0.0);
+    lowSlider.setName("Low");
+    lowSlider.addListener(this);
+    addAndMakeVisible(lowSlider);
+    
+    // setting up middle slider
+    midSlider.setSliderStyle(juce::Slider::LinearVertical);
+    
 
 }
 
