@@ -5,6 +5,7 @@
 #include "DjAudioPlayer.h"
 #include "DeckGUI.h"
 #include "PlaylistComponent.h"
+#include "EqualizerComponent.h"
 
 //==============================================================================
 /*
@@ -42,6 +43,8 @@ private:
     
     
     PlaylistComponent playlistComponent;
+    
+    EqualizerComponent equalizerComponent;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
