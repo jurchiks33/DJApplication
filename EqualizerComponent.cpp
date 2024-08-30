@@ -23,7 +23,21 @@ EqualizerComponent::EqualizerComponent()
     
     // setting up middle slider
     midSlider.setSliderStyle(juce::Slider::LinearVertical);
+    midSlider.setRange(-12.0, 12.0);
+    midSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    midSlider.setValue(0.0);
+    midSlider.setName("Mid");
+    midSlider.addListener(this);
+    addAndMakeVisible(midSlider);
     
+    // setting up high slider
+    highSlider.setSliderStyle(juce::Slider::LinearVertical);
+    highSlider.setRange(-12.0, 12.0);
+    highSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    highSlider.setValue(0.0);
+    highSlider.setName("High");
+    highSlider.addListener(this);
+    addAndMakeVisible(highSlider);
 
 }
 
