@@ -37,7 +37,7 @@ private:
     juce::Slider highSlider;    // high frequency slider
     
     juce::TextButton bypassButton;  // Bypass EQ
-    juce::textButton resetButton;   // Reset EQ settings
+    juce::TextButton resetButton;   // Reset EQ settings
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerComponent)
 };

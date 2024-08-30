@@ -44,6 +44,10 @@ bypassButton("Bypass"), resetButton("Reset")
     bypassButton.setClickingTogglesState(true);
     bypassButton.setButtonText("Bypass");
     bypassButton.addListener(this);
+    addAndMakeVisible(bypassButton);
+    
+    resetButton.setButtonText("reset");
+    resetButton.addListener(this);
     addAndMakeVisible(resetButton);
 
 }
@@ -68,8 +72,10 @@ void EqualizerComponent::resized()
     auto area = getLocalBounds();
     int sliderWidth = area.getWidth() / 5;      // Split area in a 5 parts
     
-    lowSlider.setBounds(area.removeFromLeft(getWidth() / 3));
-    midSlider.setBounds(area.removeFromLeft(getWidth() / 2));
+    lowSlider.setBounds(area.removeFromLeft(sliderWidth));
+    bypassButton.setBounds(area.removeFromLeft(sliderWidth));   //first button
+    midSlider.setBounds(area.removeFromLeft(sliderWidth));
+    resetButton.setBounds(area.removeFromLeft(sliderWidth));    //second button
     highSlider.setBounds(area);
 }
 
@@ -89,3 +95,30 @@ void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
         // place for high frequency slider
     }
 }
+
+void EqualizerComponent::buttonClicked(juce::Button* button)
+{
+    if (button == &bypassButton)
+    {
+        // bypass EQ
+        if (bypassButton.getToggleState())
+        {
+            // code for EQ bypassing
+            std::cout << "EQ Bypassed" << std::endl;
+        }
+        else
+        {
+            // code for enabling EQ
+            std::cout << "EQ Enabled" << std::endl;
+        }
+    }
+    else if (button == &resetButton)
+    {
+        // Reset EQ sliders to default positions
+        lowSlider.setValue(0.0);
+        midSlider.setValue(0.0);
+        highSlider.setValue(0.0);
+        std::cout << "EQ Reset to default" << std::endl;
+    }
+}
+
