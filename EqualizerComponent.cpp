@@ -50,6 +50,15 @@ bypassButton("Bypass"), resetButton("Reset")
     highMidSlider.addListener(this);
     addAndMakeVisible(highMidSlider);
     
+    // setting up treble slider
+    trebleSlider.setSliderStyle(juce::Slider::LinearVertical);
+    trebleSlider.setRange(-12.0, 12.0);
+    trebleSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    trebleSlider.setValue(0.0);
+    trebleSlider.setName("Treble");
+    trebleSlider.addListener(this);
+    addAndMakeVisible(trebleSlider);
+    
 
     //Set round buttons
     bypassButton.setClickingTogglesState(true);
