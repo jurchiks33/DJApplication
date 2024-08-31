@@ -68,6 +68,15 @@ bypassButton("Bypass"), resetButton("Reset")
     presenceSlider.addListener(this);
     addAndMakeVisible(presenceSlider);
     
+    // setting up brilliance slider
+    brillianceSlider.setSliderStyle(juce::Slider::LinearVertical);
+    brillianceSlider.setRange(-12.0, 12.0);
+    brillianceSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    brillianceSlider.setValue(0.0);
+    brillianceSlider.setName("Brilliance");
+    brillianceSlider.addListener(this);
+    addAndMakeVisible(brillianceSlider);
+    
 
     //Set round buttons
     bypassButton.setClickingTogglesState(true);
