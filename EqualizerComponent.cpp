@@ -59,6 +59,15 @@ bypassButton("Bypass"), resetButton("Reset")
     trebleSlider.addListener(this);
     addAndMakeVisible(trebleSlider);
     
+    // setting up presence slider
+    presenceSlider.setSliderStyle(juce::Slider::LinearVertical);
+    presenceSlider.setRange(-12.0, 12.0);
+    presenceSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    presenceSlider.setValue(0.0);
+    presenceSlider.setName("Presence");
+    presenceSlider.addListener(this);
+    addAndMakeVisible(presenceSlider);
+    
 
     //Set round buttons
     bypassButton.setClickingTogglesState(true);
