@@ -13,14 +13,14 @@
 EqualizerComponent::EqualizerComponent() :
 bypassButton("Bypass"), resetButton("Reset")
 {
-    // setting up low slider
-    lowSlider.setSliderStyle(juce::Slider::LinearVertical);
-    lowSlider.setRange(-12.0, 12.0);
-    lowSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
-    lowSlider.setValue(0.0);
-    lowSlider.setName("Low");
-    lowSlider.addListener(this);
-    addAndMakeVisible(lowSlider);
+    // setting up bass slider
+    bassSlider.setSliderStyle(juce::Slider::LinearVertical);
+    bassSlider.setRange(-12.0, 12.0);
+    bassSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    bassSlider.setValue(0.0);
+    bassSlider.setName("Bass");
+    bassSlider.addListener(this);
+    addAndMakeVisible(bassSlider);
     
     // setting up middle slider
     midSlider.setSliderStyle(juce::Slider::LinearVertical);
@@ -31,15 +31,7 @@ bypassButton("Bypass"), resetButton("Reset")
     midSlider.addListener(this);
     addAndMakeVisible(midSlider);
     
-    // setting up high slider
-    highSlider.setSliderStyle(juce::Slider::LinearVertical);
-    highSlider.setRange(-12.0, 12.0);
-    highSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
-    highSlider.setValue(0.0);
-    highSlider.setName("High");
-    highSlider.addListener(this);
-    addAndMakeVisible(highSlider);
-    
+
     //Set round buttons
     bypassButton.setClickingTogglesState(true);
     bypassButton.setButtonText("Bypass");
