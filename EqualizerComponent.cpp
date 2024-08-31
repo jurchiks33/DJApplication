@@ -22,6 +22,15 @@ bypassButton("Bypass"), resetButton("Reset")
     bassSlider.addListener(this);
     addAndMakeVisible(bassSlider);
     
+    // setting up low-mid slider
+    lowMidSlider.setSliderStyle(juce::Slider::LinearVertical);
+    lowMidSlider.setRange(-12.0, 12.0);
+    lowMidSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    lowMidSlider.setValue(0.0);
+    lowMidSlider.setName("Low-Mid");
+    lowMidSlider.addListener(this);
+    addAndMakeVisible(lowMidSlider);
+    
     // setting up middle slider
     midSlider.setSliderStyle(juce::Slider::LinearVertical);
     midSlider.setRange(-12.0, 12.0);
