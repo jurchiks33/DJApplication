@@ -96,41 +96,63 @@ EqualizerComponent::~EqualizerComponent()
 
 void EqualizerComponent::paint (juce::Graphics& g)
 {
-
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
-
+    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
-    g.drawText ("Equalizer", getLocalBounds(),
-                juce::Justification::centredTop, true);   // draw placeholder text
+    g.drawText ("Equalizer", getLocalBounds(), juce::Justification::centredTop, true);
 }
 
 void EqualizerComponent::resized()
 {
     auto area = getLocalBounds();
-    int sliderWidth = area.getWidth() / 5;      // Split area in a 5 parts
-    
-    lowSlider.setBounds(area.removeFromLeft(sliderWidth));
-    bypassButton.setBounds(area.removeFromLeft(sliderWidth));   //first button
-    midSlider.setBounds(area.removeFromLeft(sliderWidth));
-    resetButton.setBounds(area.removeFromLeft(sliderWidth));    //second button
-    highSlider.setBounds(area);
+    auto sliderArea = area.removeFromLeft(area.getWidth() * 0.7);  // Left 70% for sliders
+    int sliderWidth = sliderArea.getWidth() / 7; // Divide area for 7 sliders
+
+    // Position sliders in left section
+    bassSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
+    lowMidSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
+    midSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
+    highMidSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
+    trebleSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
+    presenceSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
+    brillianceSlider.setBounds(sliderArea);
+
+    // Position buttons in right section
+    auto buttonArea = area;  // Remaining area on the right
+    bypassButton.setBounds(buttonArea.removeFromTop(40)); // 40px height per button
+    resetButton.setBounds(buttonArea.removeFromTop(40));
 }
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
 {
-    //slider handling for equalizer
-    if (slider == &lowSlider)
+    // Handle slider value changes for frequency adjustments
+    if (slider == &bassSlider)
     {
-        //place for low frequency slider
+        // Adjust bass frequencies
+    }
+    else if (slider == &lowMidSlider)
+    {
+        // Adjust low-mid frequencies
     }
     else if (slider == &midSlider)
     {
-        //place for middle frequency slider
+        // Adjust mid frequencies
     }
-    else if (slider == &highSlider)
+    else if (slider == &highMidSlider)
     {
-        // place for high frequency slider
+        // Adjust high-mid frequencies
+    }
+    else if (slider == &trebleSlider)
+    {
+        // Adjust treble frequencies
+    }
+    else if (slider == &presenceSlider)
+    {
+        // Adjust presence frequencies
+    }
+    else if (slider == &brillianceSlider)
+    {
+        // Adjust brilliance frequencies
     }
 }
 
@@ -138,24 +160,26 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
 {
     if (button == &bypassButton)
     {
-        // bypass EQ
+        // Toggle EQ bypass
         if (bypassButton.getToggleState())
         {
-            // code for EQ bypassing
             std::cout << "EQ Bypassed" << std::endl;
         }
         else
         {
-            // code for enabling EQ
             std::cout << "EQ Enabled" << std::endl;
         }
     }
     else if (button == &resetButton)
     {
-        // Reset EQ sliders to default positions
-        lowSlider.setValue(0.0);
+        // Reset sliders to default positions
+        bassSlider.setValue(0.0);
+        lowMidSlider.setValue(0.0);
         midSlider.setValue(0.0);
-        highSlider.setValue(0.0);
+        highMidSlider.setValue(0.0);
+        trebleSlider.setValue(0.0);
+        presenceSlider.setValue(0.0);
+        brillianceSlider.setValue(0.0);
         std::cout << "EQ Reset to default" << std::endl;
     }
 }
