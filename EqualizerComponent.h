@@ -43,5 +43,14 @@ private:
     juce::TextButton bypassButton;  // Bypass EQ
     juce::TextButton resetButton;   // Reset EQ settings
     
+    // filters for equalizer frequency sliders
+    juce::dsp::IIR::Filter<float> bassFilter;
+    juce::dsp::IIR::Filter<float> lowMidFilter;
+    juce::dsp::IIR::Filter<float> midFilter;
+    juce::dsp::IIR::Filter<float> highMidFilter;
+    juce::dsp::IIR::Filter<float> trebleFilter;
+    juce::dsp::IIR::Filter<float> presenceFilter;
+    juce::dsp::IIR::Filter<float> brillianceFilter;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerComponent)
 };
