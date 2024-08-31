@@ -40,6 +40,16 @@ bypassButton("Bypass"), resetButton("Reset")
     midSlider.addListener(this);
     addAndMakeVisible(midSlider);
     
+    
+    // setting up high-mid slider
+    highMidSlider.setSliderStyle(juce::Slider::LinearVertical);
+    highMidSlider.setRange(-12.0, 12.0);
+    highMidSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    highMidSlider.setValue(0.0);
+    highMidSlider.setName("High-Mid");
+    highMidSlider.addListener(this);
+    addAndMakeVisible(highMidSlider);
+    
 
     //Set round buttons
     bypassButton.setClickingTogglesState(true);
