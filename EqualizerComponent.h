@@ -32,9 +32,13 @@ public:
     void buttonClicked(juce::Button* button) override;
     
 private:
-    juce::Slider lowSlider;     //low frequency slider
-    juce::Slider midSlider;     // middle frequency slider
-    juce::Slider highSlider;    // high frequency slider
+    juce::Slider bassSlider;     // Low frequency (Bass)
+    juce::Slider lowMidSlider;   // Low-mid frequencies
+    juce::Slider midSlider;      // Mid frequencies
+    juce::Slider highMidSlider;  // High-mid frequencies
+    juce::Slider trebleSlider;   // High frequencies (Treble)
+    juce::Slider presenceSlider; // Presence frequencies
+    juce::Slider brillianceSlider; // High frequencies (Brilliance)
     
     juce::TextButton bypassButton;  // Bypass EQ
     juce::TextButton resetButton;   // Reset EQ settings
