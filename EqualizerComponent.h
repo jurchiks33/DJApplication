@@ -52,5 +52,17 @@ private:
     juce::dsp::IIR::Filter<float> presenceFilter;
     juce::dsp::IIR::Filter<float> brillianceFilter;
     
+    // filter state objects
+    juce::dsp::IIR::Coefficients<float>::Ptr bassCoefficients;
+    juce::dsp::IIR::Coefficients<float>::Ptr lowMidCoefficients;
+    juce::dsp::IIR::Coefficients<float>::Ptr midCoefficients;
+    juce::dsp::IIR::Coefficients<float>::Ptr highMidCoefficients;
+    juce::dsp::IIR::Coefficients<float>::Ptr trebleCoefficients;
+    juce::dsp::IIR::Coefficients<float>::Ptr presenceCoefficients;
+    juce::dsp::IIR::Coefficients<float>::Ptr brillianceCoefficients;
+    
+    void updateFilterCoefficients();
+    
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerComponent)
 };
