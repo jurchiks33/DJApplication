@@ -87,6 +87,12 @@ bypassButton("Bypass"), resetButton("Reset")
     resetButton.setButtonText("reset");
     resetButton.addListener(this);
     addAndMakeVisible(resetButton);
+    
+    // initialization of filter coeeficients
+    bassCoefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(44100, 100.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    bassFilter.coefficients = bassCoefficients;
+    
+    
 
 }
 
