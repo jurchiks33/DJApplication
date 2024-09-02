@@ -38,6 +38,7 @@ private:
     juce::Slider volSlider;
     juce::Slider speedSlider;
     juce::Slider posSlider;
+    juce::Slider bpmSlider;
     
     DJAudioPlayer* player;
     

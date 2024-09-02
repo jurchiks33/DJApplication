@@ -23,8 +23,11 @@ public:
 
     void start();
     void stop();
+    
+    void syncBPM();
 
     double getPositionRelative();
+    
 
 private:
     juce::AudioFormatManager& formatManager;

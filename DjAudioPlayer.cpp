@@ -114,3 +114,15 @@ double DJAudioPlayer::getPositionRelative()
 {
     return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
 }
+
+void DJAudioPlayer::syncBPM()
+{
+    double referenceBPM = 120.0;
+    double currentBPM = getBPM();
+    if (currentBPM > 0)
+    {
+        double speedRatio = referenceBPM / currentBPM;
+        setSpeed(speedRatio); // Adjust speed to match the reference BPM
+        std::cout << "Syncing BPM to " << referenceBPM << std::endl;
+    }
+}

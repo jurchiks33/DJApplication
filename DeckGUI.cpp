@@ -13,6 +13,7 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
     addAndMakeVisible(stopButton);
     addAndMakeVisible(loadButton);
     addAndMakeVisible(syncButton); // Add the Sync button
+    addAndMakeVisible(bpmSlider);
 
     addAndMakeVisible(volSlider);
     addAndMakeVisible(speedSlider);
@@ -27,10 +28,13 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
     volSlider.addListener(this);
     speedSlider.addListener(this);
     posSlider.addListener(this);
+    bpmSlider.addListener(this);
     
     volSlider.setRange(0.0, 1.0);
     speedSlider.setRange(0.0, 100.0);
     posSlider.setRange(0.0, 1.0);
+    bpmSlider.setRange(60.0, 200.0);
+    bpmSlider.setValue(120.0);
     
     startTimer(500);
 }
@@ -57,6 +61,8 @@ void DeckGUI::resized()
     playButton.setBounds(0, 0, getWidth(), rowH);
     stopButton.setBounds(0, rowH, getWidth(), rowH);
     syncButton.setBounds(0, rowH * 2, getWidth(), rowH); // Set bounds for Sync button
+    bpmSlider.setBounds(0, rowH * 3, getWidth(), rowH); // Position the BPM slider
+
     volSlider.setBounds(0, rowH * 3, getWidth(), rowH);
     speedSlider.setBounds(0, rowH * 4, getWidth(), rowH);
     posSlider.setBounds(0, rowH * 5, getWidth(), rowH);
@@ -110,6 +116,10 @@ void DeckGUI::sliderValueChanged(juce::Slider* slider)
     else if (slider == &posSlider)
     {
         player->setPositionRelative(slider->getValue());
+    }
+    else if (slider == &bpmSlider)
+    {
+        player->setBPM(slider->getValue()); // Set BPM on the player
     }
 }
 
