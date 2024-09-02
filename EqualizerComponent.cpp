@@ -10,7 +10,6 @@
 #include "EqualizerComponent.h"
 #include <juce_dsp/juce_dsp.h>
 
-//==============================================================================
 EqualizerComponent::EqualizerComponent() :
     bypassButton("Bypass"), resetButton("Reset")
 {
@@ -32,6 +31,15 @@ EqualizerComponent::EqualizerComponent() :
     resetButton.addListener(this);
     addAndMakeVisible(resetButton);
 
+    // Setup BPM slider
+    bpmSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+    bpmSlider.setRange(60.0, 200.0);
+    bpmSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    bpmSlider.setValue(120.0); // Default value
+    bpmSlider.addListener(this);
+    bpmSlider.setName("BPM");
+    addAndMakeVisible(bpmSlider);
+
     // Initialize filters
     initializeFilters();
 }
@@ -51,7 +59,7 @@ void EqualizerComponent::paint(juce::Graphics& g)
 void EqualizerComponent::resized()
 {
     auto area = getLocalBounds();
-    auto sliderArea = area.removeFromLeft(area.getWidth() * 0.5); // Adjust width ratio as needed
+    auto sliderArea = area.removeFromLeft(area.getWidth() * 0.5);
     int sliderWidth = sliderArea.getWidth() / 7;
 
     // Position sliders on the left
@@ -63,10 +71,11 @@ void EqualizerComponent::resized()
     presenceSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
     brillianceSlider.setBounds(sliderArea);
 
-    // Position buttons on the right, one below the other
-    auto buttonArea = area.removeFromRight(area.getWidth()); // Right side of the component
+    // Position buttons and BPM slider on the right, one below the other
+    auto buttonArea = area.removeFromRight(area.getWidth());
     bypassButton.setBounds(buttonArea.removeFromTop(40).reduced(10)); // Adjust button height as needed
     resetButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
+    bpmSlider.setBounds(buttonArea.removeFromTop(40).reduced(10)); // Place BPM slider under reset button
 }
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
@@ -101,6 +110,11 @@ void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
     {
         updateFilter(brillianceFilter, juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(brillianceSlider.getValue())));
     }
+    else if (slider == &bpmSlider) // Handle BPM slider changes
+    {
+        // Logic to handle BPM change if needed
+        std::cout << "BPM set to " << bpmSlider.getValue() << std::endl;
+    }
 }
 
 void EqualizerComponent::buttonClicked(juce::Button* button)
@@ -118,6 +132,7 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
         trebleSlider.setValue(0.0);
         presenceSlider.setValue(0.0);
         brillianceSlider.setValue(0.0);
+        bpmSlider.setValue(120.0); // Reset BPM slider to default
         std::cout << "EQ Reset to default" << std::endl;
     }
 }
@@ -126,8 +141,8 @@ void EqualizerComponent::process(juce::dsp::AudioBlock<float>& audioBlock)
 {
     auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
     
-    jassert(audioBlock.getNumChannels() > 0 && audioBlock.getNumSamples() > 0); // Ensure valid audio block
-    
+    jassert(audioBlock.getNumChannels() > 0 && audioBlock.getNumSamples() > 0);
+
     // Safeguard: Check if filters are initialized before processing
     if (bassFilter.coefficients != nullptr) bassFilter.process(context);
     if (lowMidFilter.coefficients != nullptr) lowMidFilter.process(context);

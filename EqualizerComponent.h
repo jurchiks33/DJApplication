@@ -12,10 +12,6 @@
 #include <JuceHeader.h>
 #include <juce_dsp/juce_dsp.h>
 
-//==============================================================================
-/*
-*/
-
 class EqualizerComponent : public juce::Component,
                            public juce::Slider::Listener,
                            public juce::Button::Listener
@@ -41,6 +37,7 @@ private:
     juce::Slider trebleSlider;
     juce::Slider presenceSlider;
     juce::Slider brillianceSlider;
+    juce::Slider bpmSlider; // New BPM slider
 
     // Buttons
     juce::TextButton bypassButton;
@@ -56,7 +53,6 @@ private:
     juce::dsp::IIR::Filter<float> brillianceFilter;
 
     // Helper functions
-private:
     void setupSlider(juce::Slider& slider, const juce::String& name);
     void initializeFilters();
     void updateFilter(juce::dsp::IIR::Filter<float>& filter, const juce::dsp::IIR::Coefficients<float>::Ptr& coefficients);
