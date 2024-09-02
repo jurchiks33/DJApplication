@@ -38,8 +38,8 @@ private:
     juce::Slider volSlider;
     juce::Slider speedSlider;
     juce::Slider posSlider;
-    juce::Slider bpmSlider;
-    
+    // Removed the BPM slider declaration
+
     DJAudioPlayer* player;
     
     WaveformDisplay waveformDisplay;
