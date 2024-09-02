@@ -81,7 +81,7 @@ EqualizerComponent::EqualizerComponent() :
     resetButton.addListener(this);
     addAndMakeVisible(resetButton);
 
-    // Initialize filters directly without separate coefficients variables
+    // Initialize filters
     bassFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(44100, 100.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
     lowMidFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 250.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
     midFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 500.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
@@ -124,7 +124,7 @@ void EqualizerComponent::resized()
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
 {
-    auto sampleRate = 44100.0; // Assuming a standard sample rate; adjust as needed
+    auto sampleRate = 44100.0;
 
     if (slider == &bassSlider)
     {

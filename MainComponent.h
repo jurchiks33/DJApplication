@@ -24,10 +24,10 @@ private:
     juce::AudioFormatManager formatManager;
     juce::AudioThumbnailCache thumbCache{100};
 
-    EqualizerComponent equalizerComponent;  // Ensure this is declared before DJAudioPlayer
+    EqualizerComponent equalizerComponent;
 
-    DJAudioPlayer player1{formatManager, equalizerComponent};  // Correct constructor usage
-    DJAudioPlayer player2{formatManager, equalizerComponent};  // Correct constructor usage
+    DJAudioPlayer player1{formatManager, equalizerComponent};
+    DJAudioPlayer player2{formatManager, equalizerComponent};
 
     DeckGUI deckGUI1{&player1, formatManager, thumbCache};
     DeckGUI deckGUI2{&player2, formatManager, thumbCache};

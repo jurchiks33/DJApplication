@@ -5,7 +5,6 @@
 
   ==============================================================================
 */
-
 #pragma once
 
 #include <JuceHeader.h>
@@ -16,7 +15,7 @@
 /*
 */
 class PlaylistComponent  : public juce::Component,
-                           public juce:: TableListBoxModel,
+                           public juce::TableListBoxModel,
                            public juce::Button::Listener
 {
 public:
@@ -49,10 +48,8 @@ public:
     void buttonClicked(juce::Button* button) override;
     
 private:
-    
     juce::TableListBox tableComponent;
     std::vector<std::string> trackTitles;
-    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaylistComponent)
 };

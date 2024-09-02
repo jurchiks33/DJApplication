@@ -32,8 +32,7 @@ private:
     juce::AudioTransportSource transportSource;
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
 
-    EqualizerComponent& equalizerComponent;  // Reference to EqualizerComponent
+    EqualizerComponent& equalizerComponent;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DJAudioPlayer)
 };
-

@@ -1,9 +1,10 @@
 //DjAudioPlayer.cpp
 
 #include "DjAudioPlayer.h"
+#include <JuceHeader.h> // Ensure all JUCE headers are included
 
 DJAudioPlayer::DJAudioPlayer(juce::AudioFormatManager& _formatManager, EqualizerComponent& eqComponent)
-    : formatManager(_formatManager), equalizerComponent(eqComponent)  // Correctly initialize the equalizer component reference
+    : formatManager(_formatManager), equalizerComponent(eqComponent)
 {
 }
 
@@ -19,13 +20,9 @@ void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 
 void DJAudioPlayer::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    // Get the next block of audio from the resampler source
     resampleSource.getNextAudioBlock(bufferToFill);
     
-    // Prepare the audio block from the buffer
     juce::dsp::AudioBlock<float> block(*bufferToFill.buffer);
-    
-    // Apply the equalizer processing
     equalizerComponent.process(block);
 }
 
@@ -37,17 +34,30 @@ void DJAudioPlayer::releaseResources()
 
 void DJAudioPlayer::loadURL(juce::URL audioURL)
 {
-    std::unique_ptr<juce::InputStream> inputStream(audioURL.createInputStream(false));
+    // Correctly initializing InputStreamOptions with ParameterHandling
+    juce::URL::InputStreamOptions options(juce::URL::ParameterHandling::inPostData); // Adjust this based on the correct ParameterHandling value
+
+    // Configure options if needed
+    options.withNumRedirectsToFollow(5) // Optional: Follow up to 5 redirects
+           .withConnectionTimeoutMs(10000);  // Optional: Set timeout to 10 seconds
+
+    // Create an input stream with the configured options
+    auto inputStream = audioURL.createInputStream(options);
 
     if (inputStream != nullptr)
     {
         auto* reader = formatManager.createReaderFor(std::move(inputStream));
         if (reader != nullptr)
         {
-            std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader, true));
+            auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
             transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-            readerSource.reset(newSource.release());
+            readerSource = std::move(newSource);
         }
+    }
+    else
+    {
+        // Handle the error when inputStream is nullptr
+        std::cout << "Failed to create input stream from URL." << std::endl;
     }
 }
 
