@@ -137,34 +137,37 @@ void EqualizerComponent::resized()
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
 {
+    // Sample rate (for this example, we assume a standard 44100 Hz sample rate; adapt as necessary for your application)
+    auto sampleRate = 44100.0;
+
     // Handle slider value changes for frequency adjustments
     if (slider == &bassSlider)
     {
-        bassCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makeLowShelf(44100, 100.0f, 0.707f, juce::Decibels::decibelsToGain(bassSlider.getValue())));
+        bassFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(sampleRate, 100.0f, 0.707f, juce::Decibels::decibelsToGain(bassSlider.getValue()));
     }
     else if (slider == &lowMidSlider)
     {
-        lowMidCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 250.0f, 0.707f, juce::Decibels::decibelsToGain(lowMidSlider.getValue())));
+        lowMidFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 250.0f, 0.707f, juce::Decibels::decibelsToGain(lowMidSlider.getValue()));
     }
     else if (slider == &midSlider)
     {
-        midCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 500.0f, 0.707f, juce::Decibels::decibelsToGain(midSlider.getValue())));
+        midFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 500.0f, 0.707f, juce::Decibels::decibelsToGain(midSlider.getValue()));
     }
     else if (slider == &highMidSlider)
     {
-        highMidCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(highMidSlider.getValue())));
+        highMidFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(highMidSlider.getValue()));
     }
     else if (slider == &trebleSlider)
     {
-        trebleCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(trebleSlider.getValue())));
+        trebleFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(trebleSlider.getValue()));
     }
     else if (slider == &presenceSlider)
     {
-        presenceCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(presenceSlider.getValue())));
+        presenceFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(presenceSlider.getValue()));
     }
     else if (slider == &brillianceSlider)
     {
-        brillianceCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(brillianceSlider.getValue())));
+        brillianceFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(brillianceSlider.getValue()));
     }
 }
 
