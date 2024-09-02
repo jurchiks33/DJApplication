@@ -2,18 +2,15 @@
 
 #include "DjAudioPlayer.h"
 
-DJAudioPlayer::DJAudioPlayer(juce::AudioFormatManager& _formatManager)
-: formatManager(_formatManager)
+DJAudioPlayer::DJAudioPlayer(juce::AudioFormatManager& _formatManager, EqualizerComponent& eqComponent)
+    : formatManager(_formatManager), equalizerComponent(eqComponent)  // Correctly initialize the equalizer component reference
 {
-    //formatManager.registerBasicFormats();
 }
 
 DJAudioPlayer::~DJAudioPlayer()
 {
-    // Any necessary cleanup
 }
 
-//==============================================================================
 void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
@@ -22,7 +19,14 @@ void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 
 void DJAudioPlayer::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
+    // Get the next block of audio from the resampler source
     resampleSource.getNextAudioBlock(bufferToFill);
+    
+    // Prepare the audio block from the buffer
+    juce::dsp::AudioBlock<float> block(*bufferToFill.buffer);
+    
+    // Apply the equalizer processing
+    equalizerComponent.process(block);
 }
 
 void DJAudioPlayer::releaseResources()
@@ -33,7 +37,6 @@ void DJAudioPlayer::releaseResources()
 
 void DJAudioPlayer::loadURL(juce::URL audioURL)
 {
-    // Create an input stream directly from the URL without using InputStreamOptions
     std::unique_ptr<juce::InputStream> inputStream(audioURL.createInputStream(false));
 
     if (inputStream != nullptr)
@@ -47,8 +50,6 @@ void DJAudioPlayer::loadURL(juce::URL audioURL)
         }
     }
 }
-
-
 
 void DJAudioPlayer::setGain(double gain)
 {

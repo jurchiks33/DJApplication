@@ -81,39 +81,26 @@ EqualizerComponent::EqualizerComponent() :
     resetButton.addListener(this);
     addAndMakeVisible(resetButton);
 
-    // Initialize filter coefficients
-    bassCoefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(44100, 100.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    bassFilter.coefficients = bassCoefficients;
-
-    lowMidCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 250.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    lowMidFilter.coefficients = lowMidCoefficients;
-
-    midCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 500.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    midFilter.coefficients = midCoefficients;
-
-    highMidCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    highMidFilter.coefficients = highMidCoefficients;
-
-    trebleCoefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    trebleFilter.coefficients = trebleCoefficients;
-
-    presenceCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    presenceFilter.coefficients = presenceCoefficients;
-
-    brillianceCoefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    brillianceFilter.coefficients = brillianceCoefficients;
+    // Initialize filters directly without separate coefficients variables
+    bassFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(44100, 100.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    lowMidFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 250.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    midFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 500.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    highMidFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    trebleFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    presenceFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    brillianceFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
 }
 
 EqualizerComponent::~EqualizerComponent()
 {
 }
 
-void EqualizerComponent::paint (juce::Graphics& g)
+void EqualizerComponent::paint(juce::Graphics& g)
 {
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-    g.setColour (juce::Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("Equalizer", getLocalBounds(), juce::Justification::centredTop, true);
+    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+    g.setColour(juce::Colours::white);
+    g.setFont(14.0f);
+    g.drawText("Equalizer", getLocalBounds(), juce::Justification::centredTop, true);
 }
 
 void EqualizerComponent::resized()
@@ -137,10 +124,8 @@ void EqualizerComponent::resized()
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
 {
-    // Sample rate (for this example, we assume a standard 44100 Hz sample rate; adapt as necessary for your application)
-    auto sampleRate = 44100.0;
+    auto sampleRate = 44100.0; // Assuming a standard sample rate; adjust as needed
 
-    // Handle slider value changes for frequency adjustments
     if (slider == &bassSlider)
     {
         bassFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(sampleRate, 100.0f, 0.707f, juce::Decibels::decibelsToGain(bassSlider.getValue()));
@@ -195,4 +180,17 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
         brillianceSlider.setValue(0.0);
         std::cout << "EQ Reset to default" << std::endl;
     }
+}
+
+void EqualizerComponent::process(juce::dsp::AudioBlock<float>& audioBlock)
+{
+    auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
+
+    bassFilter.process(context);
+    lowMidFilter.process(context);
+    midFilter.process(context);
+    highMidFilter.process(context);
+    trebleFilter.process(context);
+    presenceFilter.process(context);
+    brillianceFilter.process(context);
 }

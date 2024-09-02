@@ -15,6 +15,7 @@
 //==============================================================================
 /*
 */
+
 class EqualizerComponent  : public juce::Component,
                             public juce::Slider::Listener,
                             public juce::Button::Listener
@@ -26,11 +27,11 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
-    /** Slider::Listener **/
     void sliderValueChanged (juce::Slider* slider) override;
-
-    /** Button::Listener **/
     void buttonClicked(juce::Button* button) override;
+
+    // Declare the process method
+    void process(juce::dsp::AudioBlock<float>& audioBlock);
 
 private:
     // Sliders for different frequency bands
@@ -54,17 +55,6 @@ private:
     juce::dsp::IIR::Filter<float> trebleFilter;
     juce::dsp::IIR::Filter<float> presenceFilter;
     juce::dsp::IIR::Filter<float> brillianceFilter;
-
-    // Filter state objects
-    juce::dsp::IIR::Coefficients<float>::Ptr bassCoefficients;
-    juce::dsp::IIR::Coefficients<float>::Ptr lowMidCoefficients;
-    juce::dsp::IIR::Coefficients<float>::Ptr midCoefficients;
-    juce::dsp::IIR::Coefficients<float>::Ptr highMidCoefficients;
-    juce::dsp::IIR::Coefficients<float>::Ptr trebleCoefficients;
-    juce::dsp::IIR::Coefficients<float>::Ptr presenceCoefficients;
-    juce::dsp::IIR::Coefficients<float>::Ptr brillianceCoefficients;
-
-    void updateFilterCoefficients();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerComponent)
 };
