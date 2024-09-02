@@ -24,10 +24,11 @@ public:
     void start();
     void stop();
     
-    void syncBPM();
+    void setBPM(double newBPM);  // Add this declaration
+    double getBPM() const;       // Add this declaration
+    void syncBPM();              // Add this declaration
 
     double getPositionRelative();
-    
 
 private:
     juce::AudioFormatManager& formatManager;
@@ -36,6 +37,8 @@ private:
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
 
     EqualizerComponent& equalizerComponent;
+    
+    double bpm = 120.0; // Default BPM
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DJAudioPlayer)
 };

@@ -34,14 +34,11 @@ void DJAudioPlayer::releaseResources()
 
 void DJAudioPlayer::loadURL(juce::URL audioURL)
 {
-    // Correctly initializing InputStreamOptions with ParameterHandling
-    juce::URL::InputStreamOptions options(juce::URL::ParameterHandling::inPostData); // Adjust this based on the correct ParameterHandling value
+    juce::URL::InputStreamOptions options(juce::URL::ParameterHandling::inPostData);
 
-    // Configure options if needed
-    options.withNumRedirectsToFollow(5) // Optional: Follow up to 5 redirects
-           .withConnectionTimeoutMs(10000);  // Optional: Set timeout to 10 seconds
+    options.withNumRedirectsToFollow(5)
+           .withConnectionTimeoutMs(10000);
 
-    // Create an input stream with the configured options
     auto inputStream = audioURL.createInputStream(options);
 
     if (inputStream != nullptr)
@@ -56,7 +53,6 @@ void DJAudioPlayer::loadURL(juce::URL audioURL)
     }
     else
     {
-        // Handle the error when inputStream is nullptr
         std::cout << "Failed to create input stream from URL." << std::endl;
     }
 }
@@ -115,9 +111,27 @@ double DJAudioPlayer::getPositionRelative()
     return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
 }
 
+void DJAudioPlayer::setBPM(double newBPM)
+{
+    if (newBPM > 0)
+    {
+        bpm = newBPM;
+        std::cout << "BPM set to " << bpm << std::endl;
+    }
+    else
+    {
+        std::cout << "Invalid BPM value." << std::endl;
+    }
+}
+
+double DJAudioPlayer::getBPM() const
+{
+    return bpm;
+}
+
 void DJAudioPlayer::syncBPM()
 {
-    double referenceBPM = 120.0;
+    double referenceBPM = 120.0; // This could be from another player, for example
     double currentBPM = getBPM();
     if (currentBPM > 0)
     {
