@@ -16,23 +16,24 @@
 /*
 */
 
-class EqualizerComponent  : public juce::Component,
-                            public juce::Slider::Listener,
-                            public juce::Button::Listener
+class EqualizerComponent : public juce::Component,
+                           public juce::Slider::Listener,
+                           public juce::Button::Listener
 {
 public:
     EqualizerComponent();
     ~EqualizerComponent() override;
 
-    void paint (juce::Graphics&) override;
+    void paint(juce::Graphics&) override;
     void resized() override;
 
-    void sliderValueChanged (juce::Slider* slider) override;
+    void sliderValueChanged(juce::Slider* slider) override;
     void buttonClicked(juce::Button* button) override;
 
     void process(juce::dsp::AudioBlock<float>& audioBlock);
 
 private:
+    // Sliders
     juce::Slider bassSlider;
     juce::Slider lowMidSlider;
     juce::Slider midSlider;
@@ -41,9 +42,11 @@ private:
     juce::Slider presenceSlider;
     juce::Slider brillianceSlider;
 
+    // Buttons
     juce::TextButton bypassButton;
     juce::TextButton resetButton;
 
+    // Filters
     juce::dsp::IIR::Filter<float> bassFilter;
     juce::dsp::IIR::Filter<float> lowMidFilter;
     juce::dsp::IIR::Filter<float> midFilter;
@@ -52,5 +55,11 @@ private:
     juce::dsp::IIR::Filter<float> presenceFilter;
     juce::dsp::IIR::Filter<float> brillianceFilter;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerComponent)
+    // Helper functions
+private:
+    void setupSlider(juce::Slider& slider, const juce::String& name);
+    void initializeFilters();
+    void updateFilter(juce::dsp::IIR::Filter<float>& filter, const juce::dsp::IIR::Coefficients<float>::Ptr& coefficients);
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EqualizerComponent)
 };

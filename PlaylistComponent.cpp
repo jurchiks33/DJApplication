@@ -14,8 +14,9 @@ PlaylistComponent::PlaylistComponent()
 {
     trackTitles = {"Track 1", "Track 2", "Track 3", "Track 4", "Track 5", "Track 6"};
     
-    tableComponent.getHeader().addColumn("Track title", 1, 400, 50, -1, juce::TableHeaderComponent::visible);
-    tableComponent.getHeader().addColumn("", 2, 200, 50, -1, juce::TableHeaderComponent::visible);
+    tableComponent.getHeader().addColumn("Track title", 1, 400);
+    tableComponent.getHeader().addColumn("", 2, 200);
+
 
     tableComponent.setModel(this);
     addAndMakeVisible(tableComponent);
