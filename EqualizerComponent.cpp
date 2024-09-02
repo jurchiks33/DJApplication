@@ -8,12 +8,13 @@
 
 #include <JuceHeader.h>
 #include "EqualizerComponent.h"
+#include <juce_dsp/juce_dsp.h>
 
 //==============================================================================
 EqualizerComponent::EqualizerComponent() :
-bypassButton("Bypass"), resetButton("Reset")
+    bypassButton("Bypass"), resetButton("Reset")
 {
-    // setting up bass slider
+    // Initialize sliders
     bassSlider.setSliderStyle(juce::Slider::LinearVertical);
     bassSlider.setRange(-12.0, 12.0);
     bassSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
@@ -21,8 +22,7 @@ bypassButton("Bypass"), resetButton("Reset")
     bassSlider.setName("Bass");
     bassSlider.addListener(this);
     addAndMakeVisible(bassSlider);
-    
-    // setting up low-mid slider
+
     lowMidSlider.setSliderStyle(juce::Slider::LinearVertical);
     lowMidSlider.setRange(-12.0, 12.0);
     lowMidSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
@@ -30,8 +30,7 @@ bypassButton("Bypass"), resetButton("Reset")
     lowMidSlider.setName("Low-Mid");
     lowMidSlider.addListener(this);
     addAndMakeVisible(lowMidSlider);
-    
-    // setting up middle slider
+
     midSlider.setSliderStyle(juce::Slider::LinearVertical);
     midSlider.setRange(-12.0, 12.0);
     midSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
@@ -39,9 +38,7 @@ bypassButton("Bypass"), resetButton("Reset")
     midSlider.setName("Mid");
     midSlider.addListener(this);
     addAndMakeVisible(midSlider);
-    
-    
-    // setting up high-mid slider
+
     highMidSlider.setSliderStyle(juce::Slider::LinearVertical);
     highMidSlider.setRange(-12.0, 12.0);
     highMidSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
@@ -49,8 +46,7 @@ bypassButton("Bypass"), resetButton("Reset")
     highMidSlider.setName("High-Mid");
     highMidSlider.addListener(this);
     addAndMakeVisible(highMidSlider);
-    
-    // setting up treble slider
+
     trebleSlider.setSliderStyle(juce::Slider::LinearVertical);
     trebleSlider.setRange(-12.0, 12.0);
     trebleSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
@@ -58,8 +54,7 @@ bypassButton("Bypass"), resetButton("Reset")
     trebleSlider.setName("Treble");
     trebleSlider.addListener(this);
     addAndMakeVisible(trebleSlider);
-    
-    // setting up presence slider
+
     presenceSlider.setSliderStyle(juce::Slider::LinearVertical);
     presenceSlider.setRange(-12.0, 12.0);
     presenceSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
@@ -67,8 +62,7 @@ bypassButton("Bypass"), resetButton("Reset")
     presenceSlider.setName("Presence");
     presenceSlider.addListener(this);
     addAndMakeVisible(presenceSlider);
-    
-    // setting up brilliance slider
+
     brillianceSlider.setSliderStyle(juce::Slider::LinearVertical);
     brillianceSlider.setRange(-12.0, 12.0);
     brillianceSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
@@ -76,24 +70,38 @@ bypassButton("Bypass"), resetButton("Reset")
     brillianceSlider.setName("Brilliance");
     brillianceSlider.addListener(this);
     addAndMakeVisible(brillianceSlider);
-    
 
-    //Set round buttons
+    // Setup round buttons
     bypassButton.setClickingTogglesState(true);
     bypassButton.setButtonText("Bypass");
     bypassButton.addListener(this);
     addAndMakeVisible(bypassButton);
-    
-    resetButton.setButtonText("reset");
+
+    resetButton.setButtonText("Reset");
     resetButton.addListener(this);
     addAndMakeVisible(resetButton);
-    
-    // initialization of filter coeeficients
+
+    // Initialize filter coefficients
     bassCoefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(44100, 100.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
     bassFilter.coefficients = bassCoefficients;
-    
-    
 
+    lowMidCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 250.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    lowMidFilter.coefficients = lowMidCoefficients;
+
+    midCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 500.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    midFilter.coefficients = midCoefficients;
+
+    highMidCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    highMidFilter.coefficients = highMidCoefficients;
+
+    trebleCoefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    trebleFilter.coefficients = trebleCoefficients;
+
+    presenceCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    presenceFilter.coefficients = presenceCoefficients;
+
+    brillianceCoefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    brillianceFilter.coefficients = brillianceCoefficients;
 }
 
 EqualizerComponent::~EqualizerComponent()
@@ -111,10 +119,9 @@ void EqualizerComponent::paint (juce::Graphics& g)
 void EqualizerComponent::resized()
 {
     auto area = getLocalBounds();
-    auto sliderArea = area.removeFromLeft(area.getWidth() * 0.7);  // Left 70% for sliders
-    int sliderWidth = sliderArea.getWidth() / 7; // Divide area for 7 sliders
+    auto sliderArea = area.removeFromLeft(area.getWidth() * 0.7);
+    int sliderWidth = sliderArea.getWidth() / 7;
 
-    // Position sliders in left section
     bassSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
     lowMidSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
     midSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
@@ -123,9 +130,8 @@ void EqualizerComponent::resized()
     presenceSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
     brillianceSlider.setBounds(sliderArea);
 
-    // Position buttons in right section
-    auto buttonArea = area;  // Remaining area on the right
-    bypassButton.setBounds(buttonArea.removeFromTop(40)); // 40px height per button
+    auto buttonArea = area;
+    bypassButton.setBounds(buttonArea.removeFromTop(40));
     resetButton.setBounds(buttonArea.removeFromTop(40));
 }
 
@@ -134,31 +140,31 @@ void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
     // Handle slider value changes for frequency adjustments
     if (slider == &bassSlider)
     {
-        // Adjust bass frequencies
+        bassCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makeLowShelf(44100, 100.0f, 0.707f, juce::Decibels::decibelsToGain(bassSlider.getValue())));
     }
     else if (slider == &lowMidSlider)
     {
-        // Adjust low-mid frequencies
+        lowMidCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 250.0f, 0.707f, juce::Decibels::decibelsToGain(lowMidSlider.getValue())));
     }
     else if (slider == &midSlider)
     {
-        // Adjust mid frequencies
+        midCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 500.0f, 0.707f, juce::Decibels::decibelsToGain(midSlider.getValue())));
     }
     else if (slider == &highMidSlider)
     {
-        // Adjust high-mid frequencies
+        highMidCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(highMidSlider.getValue())));
     }
     else if (slider == &trebleSlider)
     {
-        // Adjust treble frequencies
+        trebleCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(trebleSlider.getValue())));
     }
     else if (slider == &presenceSlider)
     {
-        // Adjust presence frequencies
+        presenceCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(presenceSlider.getValue())));
     }
     else if (slider == &brillianceSlider)
     {
-        // Adjust brilliance frequencies
+        brillianceCoefficients->setCoefficients(juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(brillianceSlider.getValue())));
     }
 }
 
@@ -166,7 +172,6 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
 {
     if (button == &bypassButton)
     {
-        // Toggle EQ bypass
         if (bypassButton.getToggleState())
         {
             std::cout << "EQ Bypassed" << std::endl;
@@ -178,7 +183,6 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
     }
     else if (button == &resetButton)
     {
-        // Reset sliders to default positions
         bassSlider.setValue(0.0);
         lowMidSlider.setValue(0.0);
         midSlider.setValue(0.0);
@@ -189,4 +193,3 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
         std::cout << "EQ Reset to default" << std::endl;
     }
 }
-
