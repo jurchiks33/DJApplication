@@ -28,6 +28,11 @@ public:
     void filesDropped (const juce::StringArray &files, int x, int y) override;
     
     void timerCallback() override;
+    
+    //---------------------------------------
+    void loadTrack(const juce::String& trackName);
+    
+    //---------------------------------------
 
 private:
     juce::TextButton playButton{"PLAY"};

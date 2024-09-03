@@ -6,7 +6,8 @@
 
 MainComponent::MainComponent()
     : player1(formatManager, equalizerComponent),
-      player2(formatManager, equalizerComponent)
+      player2(formatManager, equalizerComponent),
+      playlistComponent(&deckGUI1, &deckGUI2)
 {
     setSize (800, 600);
 
