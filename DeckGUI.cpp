@@ -65,19 +65,52 @@ void DeckGUI::resized()
     loadButton.setBounds(0, rowH * 8, getWidth(), rowH);
 }
 
+//void DeckGUI::buttonClicked(juce::Button* button)
+//{
+//    if (button == &playButton)
+//    {
+//        std::cout<< "Play button was clicked " << std::endl;
+//        player->start();
+//    }
+//    if (button == &stopButton)
+//    {
+//        std::cout<< "Stop button was clicked " << std::endl;
+//        player->stop();
+//    }
+//    if (button == &loadButton)
+//    {
+//        auto fileChooserFlags = juce::FileBrowserComponent::canSelectFiles;
+//        fChooser.launchAsync(fileChooserFlags, [this](const juce::FileChooser& chooser)
+//        {
+//            juce::File chosenFile = chooser.getResult();
+//            if (chosenFile.existsAsFile())
+//            {
+//                player->loadURL(juce::URL{chooser.getResult()});
+//                waveformDisplay.loadURL(juce::URL{chooser.getResult()});
+//            }
+//        });
+//    }
+//    if (button == &syncButton)
+//    {
+//        std::cout<< "Sync button was clicked " << std::endl;
+//        // Placeholder for Sync functionality
+//        player->syncBPM(); // Assuming player has a method to sync BPM
+//    }
+//}
+
 void DeckGUI::buttonClicked(juce::Button* button)
 {
     if (button == &playButton)
     {
-        std::cout<< "Play button was clicked " << std::endl;
+        std::cout << "Play button was clicked " << std::endl;
         player->start();
     }
-    if (button == &stopButton)
+    else if (button == &stopButton)
     {
-        std::cout<< "Stop button was clicked " << std::endl;
+        std::cout << "Stop button was clicked " << std::endl;
         player->stop();
     }
-    if (button == &loadButton)
+    else if (button == &loadButton)
     {
         auto fileChooserFlags = juce::FileBrowserComponent::canSelectFiles;
         fChooser.launchAsync(fileChooserFlags, [this](const juce::FileChooser& chooser)
@@ -85,18 +118,39 @@ void DeckGUI::buttonClicked(juce::Button* button)
             juce::File chosenFile = chooser.getResult();
             if (chosenFile.existsAsFile())
             {
-                player->loadURL(juce::URL{chooser.getResult()});
-                waveformDisplay.loadURL(juce::URL{chooser.getResult()});
+                player->loadURL(juce::URL{chosenFile});
+                waveformDisplay.loadURL(juce::URL{chosenFile});
             }
         });
     }
-    if (button == &syncButton)
+    else if (button == &syncButton)
     {
-        std::cout<< "Sync button was clicked " << std::endl;
-        // Placeholder for Sync functionality
-        player->syncBPM(); // Assuming player has a method to sync BPM
+        std::cout << "Sync button was clicked " << std::endl;
+
+        // Retrieve BPM from the other deck - adjust this according to your app's design
+        double targetBPM = deck2 ? deck2->getPlayerBPM() : 120.0; // Assuming deck2 is a pointer to the other DeckGUI instance
+        double currentBPM = player->getBPM();
+
+        // Check if the target BPM is valid
+        if (currentBPM > 0 && targetBPM > 0)
+        {
+            double speedRatio = targetBPM / currentBPM;
+            player->setSpeed(speedRatio);
+            std::cout << "Adjusted speed to ratio: " << speedRatio << std::endl;
+
+            // Align playhead positions if needed - adjust as per your application's requirements
+            if (deck2)
+            {
+                double targetPosition = deck2->getPlayerPosition(); // Get playhead position from the other deck
+                player->setPosition(targetPosition);
+                std::cout << "Aligned playhead position to match other deck." << std::endl;
+            }
+        }
     }
 }
+
+
+
 
 void DeckGUI::sliderValueChanged(juce::Slider* slider)
 {
