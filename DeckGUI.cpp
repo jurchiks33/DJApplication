@@ -127,29 +127,25 @@ void DeckGUI::buttonClicked(juce::Button* button)
     {
         std::cout << "Sync button was clicked " << std::endl;
 
-        // Retrieve BPM from the other deck - adjust this according to your app's design
-        double targetBPM = deck2 ? deck2->getPlayerBPM() : 120.0; // Assuming deck2 is a pointer to the other DeckGUI instance
-        double currentBPM = player->getBPM();
-
-        // Check if the target BPM is valid
-        if (currentBPM > 0 && targetBPM > 0)
+        if (otherDeck)
         {
-            double speedRatio = targetBPM / currentBPM;
-            player->setSpeed(speedRatio);
-            std::cout << "Adjusted speed to ratio: " << speedRatio << std::endl;
+            double targetBPM = otherDeck->getPlayerBPM(); // Use the BPM from the other deck
+            double currentBPM = player->getBPM();
 
-            // Align playhead positions if needed - adjust as per your application's requirements
-            if (deck2)
+            if (currentBPM > 0 && targetBPM > 0)
             {
-                double targetPosition = deck2->getPlayerPosition(); // Get playhead position from the other deck
+                double speedRatio = targetBPM / currentBPM;
+                player->setSpeed(speedRatio);
+                std::cout << "Adjusted speed to ratio: " << speedRatio << std::endl;
+
+                // Optionally align playhead positions
+                double targetPosition = otherDeck->getPlayerPosition();
                 player->setPosition(targetPosition);
                 std::cout << "Aligned playhead position to match other deck." << std::endl;
             }
         }
     }
 }
-
-
 
 
 void DeckGUI::sliderValueChanged(juce::Slider* slider)

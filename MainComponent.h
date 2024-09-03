@@ -31,6 +31,8 @@ private:
 
     DeckGUI deckGUI1{&player1, formatManager, thumbCache};
     DeckGUI deckGUI2{&player2, formatManager, thumbCache};
+    
+    
 
     juce::MixerAudioSource mixerSource;
 

@@ -1,6 +1,3 @@
-
-//MainComponent.cpp
-
 #include "MainComponent.h"
 
 //==============================================================================
@@ -8,20 +5,22 @@
 MainComponent::MainComponent()
     : player1(formatManager, equalizerComponent),
       player2(formatManager, equalizerComponent),
+      deckGUI1(&player1, formatManager, thumbCache),
+      deckGUI2(&player2, formatManager, thumbCache),
       playlistComponent(&deckGUI1, &deckGUI2)
 {
-    setSize (800, 600);
+    setSize(800, 600);
 
     // Request audio permissions if needed
-    if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
-        && ! juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
+    if (juce::RuntimePermissions::isRequired(juce::RuntimePermissions::recordAudio)
+        && !juce::RuntimePermissions::isGranted(juce::RuntimePermissions::recordAudio))
     {
-        juce::RuntimePermissions::request (juce::RuntimePermissions::recordAudio,
-                                           [&] (bool granted) { setAudioChannels (granted ? 2 : 0, 2); });
+        juce::RuntimePermissions::request(juce::RuntimePermissions::recordAudio,
+                                           [&] (bool granted) { setAudioChannels(granted ? 2 : 0, 2); });
     }
     else
     {
-        setAudioChannels (0, 2); // Setup audio channels
+        setAudioChannels(0, 2); // Setup audio channels
     }
     
     // Add components to the visible area
@@ -29,6 +28,10 @@ MainComponent::MainComponent()
     addAndMakeVisible(deckGUI2);
     addAndMakeVisible(playlistComponent);
     addAndMakeVisible(equalizerComponent);
+
+    // Set each deck's reference to the other
+    deckGUI1.setOtherDeck(&deckGUI2);
+    deckGUI2.setOtherDeck(&deckGUI1);
 
     // Register basic audio formats
     formatManager.registerBasicFormats();
@@ -39,7 +42,7 @@ MainComponent::~MainComponent()
     shutdownAudio(); // Clean up audio resources
 }
 
-void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
+void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
     // Prepare players and mixer for audio playback
     player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
@@ -51,7 +54,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     mixerSource.addInputSource(&player2, false);
 }
 
-void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
+void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     // Fill the audio buffer from the mixer source
     mixerSource.getNextAudioBlock(bufferToFill);
@@ -65,10 +68,10 @@ void MainComponent::releaseResources()
     mixerSource.releaseResources();
 }
 
-void MainComponent::paint (juce::Graphics& g)
+void MainComponent::paint(juce::Graphics& g)
 {
     // Fill background with the look and feel color
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 }
 
 void MainComponent::resized()
@@ -84,5 +87,5 @@ void MainComponent::resized()
     equalizerComponent.setBounds(0, deckHeight, getWidth(), deckHeight);
     
     // Set bounds for the Playlist component
-    playlistComponent.setBounds(0, deckHeight * 2, getWidth(), deckHeight); // Ensure correct positioning and size
+    playlistComponent.setBounds(0, deckHeight * 2, getWidth(), deckHeight);
 }
