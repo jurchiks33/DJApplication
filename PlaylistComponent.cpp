@@ -234,21 +234,32 @@ void PlaylistComponent::buttonClicked(juce::Button* button)
     }
 }
 
+// PlaylistComponent.cpp
 void PlaylistComponent::loadPlaylist()
 {
     std::cout << "Starting loadPlaylist function." << std::endl;
 
-    auto chooser = std::make_unique<juce::FileChooser>("Select Audio Files", juce::File{}, "*.wav;*.mp3;*.flac;*.aiff");
-    chooser->launchAsync(juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::canSelectMultipleItems,
-                         [this](const juce::FileChooser& fc)
+    // Use the member FileChooser instance
+    chooser = std::make_unique<juce::FileChooser>(
+        "Select Audio Files",
+        juce::File::getSpecialLocation(juce::File::userMusicDirectory),
+        "*.wav;*.mp3;*.flac;*.aiff"
+    );
+
+    std::cout << "FileChooser created." << std::endl;
+
+    auto fileChooserFlags = juce::FileBrowserComponent::openMode |
+                            juce::FileBrowserComponent::canSelectFiles |
+                            juce::FileBrowserComponent::canSelectMultipleItems;
+
+    chooser->launchAsync(fileChooserFlags, [this](const juce::FileChooser& fc)
     {
-        std::cout << "File chooser callback triggered." << std::endl;
+        std::cout << "FileChooser callback triggered." << std::endl;
 
         auto results = fc.getResults();
-
         if (results.isEmpty())
         {
-            std::cout << "No files selected." << std::endl;
+            std::cout << "No files were selected." << std::endl;
             return;
         }
 
@@ -266,10 +277,12 @@ void PlaylistComponent::loadPlaylist()
             }
         }
 
-        // Refresh table content to display loaded tracks
         tableComponent.updateContent();
         tableComponent.repaint();
 
         std::cout << "Playlist loaded and table updated." << std::endl;
     });
+
+    std::cout << "After launchAsync call." << std::endl;
 }
+

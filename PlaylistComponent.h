@@ -103,12 +103,13 @@ public:
 
 private:
     juce::TableListBox tableComponent;
-    std::vector<std::string> trackTitles; // To store track titles
-    std::vector<juce::URL> trackUrls; // To store track URLs
+    std::vector<std::string> trackTitles;
+    std::vector<juce::URL> trackUrls;
 
-    std::unique_ptr<juce::TextButton> loadPlaylistButton; // Unique pointer for the Load Playlist button
+    std::unique_ptr<juce::TextButton> loadPlaylistButton;
+    std::unique_ptr<juce::FileChooser> chooser; // Declare FileChooser as a member variable
 
-    DeckGUI* deck1; // Pointers to DeckGUIs
+    DeckGUI* deck1;
     DeckGUI* deck2;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlaylistComponent)
