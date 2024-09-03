@@ -3,12 +3,12 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "EqualizerComponent.h"
+
+class EqualizerComponent;  // Forward declaration of EqualizerComponent
 
 class DJAudioPlayer : public juce::AudioSource {
 public:
-    DJAudioPlayer(juce::AudioFormatManager& _formatManager, EqualizerComponent& eqComponent);
-
+    DJAudioPlayer(juce::AudioFormatManager& formatManager, EqualizerComponent& eqComponent);
     ~DJAudioPlayer();
 
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
@@ -24,9 +24,9 @@ public:
     void start();
     void stop();
     
-    void setBPM(double newBPM);  // Add this declaration
-    double getBPM() const;       // Add this declaration
-    void syncBPM();              // Add this declaration
+    void setBPM(double newBPM);
+    double getBPM() const;
+    void syncBPM();
 
     double getPositionRelative();
 
@@ -36,9 +36,9 @@ private:
     juce::AudioTransportSource transportSource;
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
 
-    EqualizerComponent& equalizerComponent;
-    
+    EqualizerComponent& equalizerComponent;  // Reference to EqualizerComponent
+
     double bpm = 120.0; // Default BPM
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DJAudioPlayer)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DJAudioPlayer)
 };

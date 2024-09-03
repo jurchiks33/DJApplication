@@ -1,10 +1,12 @@
 //DjAudioPlayer.cpp
 
 #include "DjAudioPlayer.h"
-#include <JuceHeader.h> // Ensure all JUCE headers are included
+#include "EqualizerComponent.h"  // Include EqualizerComponent here
+#include <JuceHeader.h>
+// Ensure all JUCE headers are included
 
-DJAudioPlayer::DJAudioPlayer(juce::AudioFormatManager& _formatManager, EqualizerComponent& eqComponent)
-    : formatManager(_formatManager), equalizerComponent(eqComponent)
+DJAudioPlayer::DJAudioPlayer(juce::AudioFormatManager& formatManager, EqualizerComponent& eqComponent)
+: formatManager(formatManager), equalizerComponent(eqComponent) 
 {
 }
 

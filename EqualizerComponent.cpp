@@ -6,12 +6,13 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
 #include "EqualizerComponent.h"
-#include <juce_dsp/juce_dsp.h>
+#include "DjAudioPlayer.h"  // Include DJAudioPlayer here
+#include <JuceHeader.h> // Include the DJAudioPlayer header
 
-EqualizerComponent::EqualizerComponent() :
-    bypassButton("Bypass"), resetButton("Reset")
+EqualizerComponent::EqualizerComponent(DJAudioPlayer& playerRef)
+    : player(playerRef), // Ensure this is initialized before other members if it comes first in the header declaration
+      bypassButton("Bypass"), resetButton("Reset")
 {
     setupSlider(bassSlider, "Bass (60 Hz)");
     setupSlider(lowMidSlider, "Low-Mid (250 Hz)");
@@ -71,51 +72,12 @@ void EqualizerComponent::resized()
     presenceSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
     brillianceSlider.setBounds(sliderArea);
 
-    // Position buttons and BPM slider on the right, one below the other
+    // Position buttons and BPM slider on the right
     auto buttonArea = area.removeFromRight(area.getWidth());
-    bypassButton.setBounds(buttonArea.removeFromTop(40).reduced(10)); // Adjust button height as needed
+    bypassButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
     resetButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
-    bpmSlider.setBounds(buttonArea.removeFromTop(40).reduced(10)); // Place BPM slider under reset button
+    bpmSlider.setBounds(buttonArea.removeFromTop(40).reduced(10));
 }
-
-//void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
-//{
-//    auto sampleRate = 44100.0;
-//
-//    if (slider == &bassSlider)
-//    {
-//        updateFilter(bassFilter, juce::dsp::IIR::Coefficients<float>::makeLowShelf(sampleRate, 60.0f, 0.707f, juce::Decibels::decibelsToGain(bassSlider.getValue())));
-//    }
-//    else if (slider == &lowMidSlider)
-//    {
-//        updateFilter(lowMidFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 250.0f, 0.707f, juce::Decibels::decibelsToGain(lowMidSlider.getValue())));
-//    }
-//    else if (slider == &midSlider)
-//    {
-//        updateFilter(midFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 500.0f, 0.707f, juce::Decibels::decibelsToGain(midSlider.getValue())));
-//    }
-//    else if (slider == &highMidSlider)
-//    {
-//        updateFilter(highMidFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(highMidSlider.getValue())));
-//    }
-//    else if (slider == &trebleSlider)
-//    {
-//        updateFilter(trebleFilter, juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(trebleSlider.getValue())));
-//    }
-//    else if (slider == &presenceSlider)
-//    {
-//        updateFilter(presenceFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(presenceSlider.getValue())));
-//    }
-//    else if (slider == &brillianceSlider)
-//    {
-//        updateFilter(brillianceFilter, juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(brillianceSlider.getValue())));
-//    }
-//    else if (slider == &bpmSlider) // Handle BPM slider changes
-//    {
-//        // Logic to handle BPM change if needed
-//        std::cout << "BPM set to " << bpmSlider.getValue() << std::endl;
-//    }
-//}
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
 {
@@ -153,14 +115,10 @@ void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
     {
         std::cout << "BPM set to " << bpmSlider.getValue() << std::endl;
         
-        // Update the player's BPM if accessible here
-        if (player) // Assuming player is a member or passed reference
-        {
-            player->setBPM(bpmSlider.getValue());
-        }
+        // Update the player's BPM
+        player.setBPM(bpmSlider.getValue());
     }
 }
-
 
 void EqualizerComponent::buttonClicked(juce::Button* button)
 {
@@ -198,7 +156,6 @@ void EqualizerComponent::process(juce::dsp::AudioBlock<float>& audioBlock)
     if (brillianceFilter.coefficients != nullptr) brillianceFilter.process(context);
 }
 
-// Helper methods to reduce redundancy and improve code structure
 void EqualizerComponent::setupSlider(juce::Slider& slider, const juce::String& name)
 {
     slider.setSliderStyle(juce::Slider::LinearVertical);

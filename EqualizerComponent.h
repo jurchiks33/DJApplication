@@ -3,7 +3,6 @@
 
     EqualizerComponent.h
 
-
   ==============================================================================
 */
 
@@ -12,12 +11,14 @@
 #include <JuceHeader.h>
 #include <juce_dsp/juce_dsp.h>
 
+class DJAudioPlayer;  // Forward declaration of DJAudioPlayer
+
 class EqualizerComponent : public juce::Component,
                            public juce::Slider::Listener,
                            public juce::Button::Listener
 {
 public:
-    EqualizerComponent();
+    EqualizerComponent(DJAudioPlayer& player);  // Constructor accepting a reference to DJAudioPlayer
     ~EqualizerComponent() override;
 
     void paint(juce::Graphics&) override;
@@ -37,7 +38,7 @@ private:
     juce::Slider trebleSlider;
     juce::Slider presenceSlider;
     juce::Slider brillianceSlider;
-    juce::Slider bpmSlider; // New BPM slider
+    juce::Slider bpmSlider; // BPM slider
 
     // Buttons
     juce::TextButton bypassButton;
@@ -51,6 +52,8 @@ private:
     juce::dsp::IIR::Filter<float> trebleFilter;
     juce::dsp::IIR::Filter<float> presenceFilter;
     juce::dsp::IIR::Filter<float> brillianceFilter;
+
+    DJAudioPlayer& player;  // Reference to DJAudioPlayer
 
     // Helper functions
     void setupSlider(juce::Slider& slider, const juce::String& name);
