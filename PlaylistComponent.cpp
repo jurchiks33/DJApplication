@@ -101,42 +101,58 @@
 #include <fstream>
 #include <sstream>
 
+
+// Constructor
 PlaylistComponent::PlaylistComponent(DeckGUI* deck1GUI, DeckGUI* deck2GUI)
     : deck1(deck1GUI), deck2(deck2GUI)
 {
+    std::cout << "Initializing PlaylistComponent..." << std::endl;
+
     tableComponent.getHeader().addColumn("Track title", 1, 400);
     tableComponent.getHeader().addColumn("Play", 2, 100); // Column for Play button
     tableComponent.getHeader().addColumn("Deck", 3, 200); // Column for Deck buttons
 
     tableComponent.setModel(this);
     addAndMakeVisible(tableComponent);
+    std::cout << "Table component added to PlaylistComponent." << std::endl;
 
     // Button to load playlist
     loadPlaylistButton = std::make_unique<juce::TextButton>("Load Playlist");
-    loadPlaylistButton->onClick = [this] { loadPlaylist(); };
-    addAndMakeVisible(*loadPlaylistButton);
+    loadPlaylistButton->onClick = [this] {
+        std::cout << "Load Playlist button clicked." << std::endl;
+        loadPlaylist();
+    };
+    addAndMakeVisible(loadPlaylistButton.get());
+    std::cout << "Load Playlist button added to PlaylistComponent." << std::endl;
 }
 
-
-PlaylistComponent::~PlaylistComponent() {}
+PlaylistComponent::~PlaylistComponent()
+{
+    std::cout << "Destroying PlaylistComponent..." << std::endl;
+}
 
 void PlaylistComponent::paint(juce::Graphics& g)
 {
     g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
     g.setColour(juce::Colours::grey);
-    g.drawRect(getLocalBounds(), 1);   // Draw a border around the component
+    g.drawRect(getLocalBounds(), 1);
+    g.setColour(juce::Colours::white);
+    g.setFont(14.0f);
+    g.drawText("PlaylistComponent", getLocalBounds(),
+               juce::Justification::centred, true);
 }
 
 void PlaylistComponent::resized()
 {
     auto area = getLocalBounds();
-    tableComponent.setBounds(area.removeFromTop(getHeight() - 30)); // Adjust height for the table
-    loadPlaylistButton->setBounds(area.removeFromBottom(30).reduced(10)); // Place button at the bottom
+    tableComponent.setBounds(area.removeFromTop(getHeight() - 40)); // Adjust the bounds to fit the load button
+    loadPlaylistButton->setBounds(area);
+    std::cout << "Resized PlaylistComponent." << std::endl;
 }
-
 
 int PlaylistComponent::getNumRows()
 {
+    std::cout << "Getting number of rows: " << trackTitles.size() << std::endl;
     return static_cast<int>(trackTitles.size()); // Return the number of tracks
 }
 
@@ -167,6 +183,7 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
             playButton->setComponentID("play_" + std::to_string(rowNumber));
             playButton->addListener(this);
             existingComponentToUpdate = playButton;
+            std::cout << "Created Play button for row " << rowNumber << std::endl;
         }
     }
     else if (columnId == 3) // Deck buttons column
@@ -188,6 +205,7 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
             deckButtonContainer->addAndMakeVisible(deck2Button);
 
             existingComponentToUpdate = deckButtonContainer;
+            std::cout << "Created Deck buttons for row " << rowNumber << std::endl;
         }
     }
     return existingComponentToUpdate;
@@ -195,6 +213,8 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
 
 void PlaylistComponent::buttonClicked(juce::Button* button)
 {
+    std::cout << "Button clicked: " << button->getComponentID() << std::endl;
+
     auto id = button->getComponentID().toStdString();
     auto rowIndex = std::stoi(id.substr(id.find('_') + 1));
 
@@ -216,23 +236,40 @@ void PlaylistComponent::buttonClicked(juce::Button* button)
 
 void PlaylistComponent::loadPlaylist()
 {
-    auto chooser = std::make_unique<juce::FileChooser>("Select a Playlist File", juce::File{}, "*.wav;*.mp3"); // You can add more supported formats
+    std::cout << "Starting loadPlaylist function." << std::endl;
+
+    auto chooser = std::make_unique<juce::FileChooser>("Select Audio Files", juce::File{}, "*.wav;*.mp3;*.flac;*.aiff");
     chooser->launchAsync(juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::canSelectMultipleItems,
                          [this](const juce::FileChooser& fc)
     {
+        std::cout << "File chooser callback triggered." << std::endl;
+
         auto results = fc.getResults();
+
+        if (results.isEmpty())
+        {
+            std::cout << "No files selected." << std::endl;
+            return;
+        }
+
         for (const auto& file : results)
         {
             if (file.existsAsFile())
             {
                 trackTitles.push_back(file.getFileName().toStdString());
                 trackUrls.push_back(juce::URL(file));
+                std::cout << "Loaded track: " << file.getFileName() << std::endl;
+            }
+            else
+            {
+                std::cout << "File does not exist: " << file.getFullPathName() << std::endl;
             }
         }
+
         // Refresh table content to display loaded tracks
         tableComponent.updateContent();
         tableComponent.repaint();
+
+        std::cout << "Playlist loaded and table updated." << std::endl;
     });
 }
-
-
