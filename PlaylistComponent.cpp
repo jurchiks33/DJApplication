@@ -158,7 +158,7 @@ void PlaylistComponent::paintCell (juce::Graphics & g, int rowNumber, int column
     }
 }
 
-juce::Component* PlaylistComponent::refreshComponentForCell (int rowNumber, int columnId, bool isRowSelected, juce::Component *existingComponentToUpdate)
+juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, juce::Component* existingComponentToUpdate)
 {
     if (columnId == 2) // Play button column
     {
@@ -175,18 +175,19 @@ juce::Component* PlaylistComponent::refreshComponentForCell (int rowNumber, int 
         if (existingComponentToUpdate == nullptr)
         {
             juce::Component* deckButtonContainer = new juce::Component();
-            deckButtonContainer->setBounds(0, 0, 200, 30);
+            deckButtonContainer->setBounds(0, 0, 200, 25); // Set the container height as needed
 
+            // Adjust the bounds to reduce height but keep the width
             auto* deck1Button = new juce::TextButton{"Deck 1"};
             deck1Button->setComponentID("deck1_" + std::to_string(rowNumber));
             deck1Button->addListener(this);
-            deck1Button->setBounds(0, 0, 90, 30);
+            deck1Button->setBounds(0, 0, 90, 20); // Set height to 20, width 90
             deckButtonContainer->addAndMakeVisible(deck1Button);
 
             auto* deck2Button = new juce::TextButton{"Deck 2"};
             deck2Button->setComponentID("deck2_" + std::to_string(rowNumber));
             deck2Button->addListener(this);
-            deck2Button->setBounds(100, 0, 90, 30);
+            deck2Button->setBounds(100, 0, 90, 20); // Set height to 20, width 90
             deckButtonContainer->addAndMakeVisible(deck2Button);
 
             existingComponentToUpdate = deckButtonContainer;
@@ -194,6 +195,7 @@ juce::Component* PlaylistComponent::refreshComponentForCell (int rowNumber, int 
     }
     return existingComponentToUpdate;
 }
+
 
 void PlaylistComponent::buttonClicked(juce::Button* button)
 {

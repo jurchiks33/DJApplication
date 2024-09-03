@@ -64,50 +64,50 @@
 #include <vector>
 #include <string>
 
-// Forward declarations
-class DeckGUI;
+class DeckGUI; // Forward declaration to use DeckGUI pointers
 
-class PlaylistComponent  : public juce::Component,
-                           public juce::TableListBoxModel,
-                           public juce::Button::Listener
+class PlaylistComponent : public juce::Component,
+                          public juce::TableListBoxModel,
+                          public juce::Button::Listener
 {
 public:
-    PlaylistComponent(DeckGUI* deck1, DeckGUI* deck2);
+    PlaylistComponent(DeckGUI* deck1, DeckGUI* deck2); // Add DeckGUI pointers
     ~PlaylistComponent() override;
 
-    void paint (juce::Graphics&) override;
+    void paint(juce::Graphics&) override;
     void resized() override;
-    
-    int getNumRows () override;
-    
-    void paintRowBackground (juce::Graphics &,
-                             int rowNumber,
-                             int width,
-                             int height,
-                             bool rowIsSelected) override;
-    
-    void paintCell (juce::Graphics &,
-                    int rowNumber,
-                    int columnId,
-                    int width,
-                    int height,
-                    bool rowIsSelected) override;
 
-    juce::Component* refreshComponentForCell (int rowNumber,
-                                              int columnId,
-                                              bool isRowSelected,
-                                              juce::Component *existingComponentToUpdate) override;
-    
+    int getNumRows() override;
+
+    void paintRowBackground(juce::Graphics&,
+                            int rowNumber,
+                            int width,
+                            int height,
+                            bool rowIsSelected) override;
+
+    void paintCell(juce::Graphics&,
+                   int rowNumber,
+                   int columnId,
+                   int width,
+                   int height,
+                   bool rowIsSelected) override;
+
+    juce::Component* refreshComponentForCell(int rowNumber,
+                                             int columnId,
+                                             bool isRowSelected,
+                                             juce::Component* existingComponentToUpdate) override;
+
     void buttonClicked(juce::Button* button) override;
-    
+
+    void loadPlaylist(); // New method to load playlist
+
 private:
     juce::TableListBox tableComponent;
     std::vector<std::string> trackTitles;
+    std::vector<juce::URL> trackUrls; // To store track URLs
 
-    // DeckGUI pointers to assign tracks
-    DeckGUI* deck1;
+    DeckGUI* deck1; // Pointers to DeckGUIs
     DeckGUI* deck2;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaylistComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlaylistComponent)
 };
-
