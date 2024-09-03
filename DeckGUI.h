@@ -1,4 +1,5 @@
-//DeckGUI.h
+
+// DeckGUI.h
 
 #pragma once
 
@@ -32,13 +33,14 @@ public:
     void loadTrack(const juce::String& trackName);
     void loadTrack(const juce::URL& audioURL);
 
-    // New method to set the other deck
-    void setOtherDeck(DeckGUI* otherDeck) { this->otherDeck = otherDeck; }
+    // Setter for the other DeckGUI instance
+    void setOtherDeck(DeckGUI* otherDeck) { deck2 = otherDeck; }
 
-    // Methods to access BPM and position (assuming these are implemented)
+    // Getter for the player's BPM
     double getPlayerBPM() const { return player->getBPM(); }
+    // Add a getter for the player's position if needed
     double getPlayerPosition() const { return player->getPositionRelative(); }
-    
+
 private:
     juce::TextButton playButton{"PLAY"};
     juce::TextButton stopButton{"STOP"};
@@ -50,12 +52,12 @@ private:
     juce::Slider posSlider;
 
     DJAudioPlayer* player;
+    
     WaveformDisplay waveformDisplay;
-
+    
     juce::FileChooser fChooser {"Please select a file..."};
-
-    // Pointer to the other DeckGUI
-    DeckGUI* otherDeck = nullptr; // Initialize to nullptr
+    
+    DeckGUI* deck2 = nullptr; // Pointer to the other deck instance
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)
 };

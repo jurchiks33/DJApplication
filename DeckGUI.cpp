@@ -98,6 +98,51 @@ void DeckGUI::resized()
 //    }
 //}
 
+//void DeckGUI::buttonClicked(juce::Button* button)
+//{
+//    if (button == &playButton)
+//    {
+//        std::cout << "Play button was clicked " << std::endl;
+//        player->start();
+//    }
+//    else if (button == &stopButton)
+//    {
+//        std::cout << "Stop button was clicked " << std::endl;
+//        player->stop();
+//    }
+//    else if (button == &loadButton)
+//    {
+//        auto fileChooserFlags = juce::FileBrowserComponent::canSelectFiles;
+//        fChooser.launchAsync(fileChooserFlags, [this](const juce::FileChooser& chooser)
+//        {
+//            juce::File chosenFile = chooser.getResult();
+//            if (chosenFile.existsAsFile())
+//            {
+//                player->loadURL(juce::URL{chosenFile});
+//                waveformDisplay.loadURL(juce::URL{chosenFile});
+//            }
+//        });
+//    }
+//    else if (button == &syncButton)
+//    {
+//        std::cout<< "Sync button was clicked " << std::endl;
+//
+//        // Check if the other deck exists and get its BPM
+//        double targetBPM = otherDeck ? otherDeck->getPlayerBPM() : 120.0; // Default to 120.0 if otherDeck is not set
+//        double currentBPM = player->getBPM();
+//
+//        std::cout << "Current BPM: " << currentBPM << ", Target BPM: " << targetBPM << std::endl;
+//
+//        // Only adjust speed, do not reset position
+//        if (currentBPM > 0 && targetBPM > 0)
+//        {
+//            double speedRatio = targetBPM / currentBPM;
+//            player->setSpeed(speedRatio);
+//            std::cout << "Adjusted speed to ratio: " << speedRatio << std::endl;
+//        }
+//    }
+//}
+
 void DeckGUI::buttonClicked(juce::Button* button)
 {
     if (button == &playButton)
@@ -127,22 +172,18 @@ void DeckGUI::buttonClicked(juce::Button* button)
     {
         std::cout << "Sync button was clicked " << std::endl;
 
-        if (otherDeck)
+        // Retrieve the BPM from the other deck
+        double targetBPM = deck2 ? deck2->getPlayerBPM() : 120.0; // Ensure deck2 is correctly set up
+        double currentBPM = player->getBPM();
+
+        // Debug output for verification
+        std::cout << "Current BPM: " << currentBPM << ", Target BPM: " << targetBPM << std::endl;
+
+        if (currentBPM > 0 && targetBPM > 0)
         {
-            double targetBPM = otherDeck->getPlayerBPM(); // Use the BPM from the other deck
-            double currentBPM = player->getBPM();
-
-            if (currentBPM > 0 && targetBPM > 0)
-            {
-                double speedRatio = targetBPM / currentBPM;
-                player->setSpeed(speedRatio);
-                std::cout << "Adjusted speed to ratio: " << speedRatio << std::endl;
-
-                // Optionally align playhead positions
-                double targetPosition = otherDeck->getPlayerPosition();
-                player->setPosition(targetPosition);
-                std::cout << "Aligned playhead position to match other deck." << std::endl;
-            }
+            double speedRatio = targetBPM / currentBPM;
+            player->setSpeed(speedRatio);
+            std::cout << "Adjusted speed to ratio: " << speedRatio << std::endl;
         }
     }
 }

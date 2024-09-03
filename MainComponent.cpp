@@ -1,7 +1,6 @@
 #include "MainComponent.h"
 
 //==============================================================================
-
 MainComponent::MainComponent()
     : player1(formatManager, equalizerComponent),
       player2(formatManager, equalizerComponent),
@@ -9,18 +8,22 @@ MainComponent::MainComponent()
       deckGUI2(&player2, formatManager, thumbCache),
       playlistComponent(&deckGUI1, &deckGUI2)
 {
-    setSize(800, 600);
+    setSize (800, 600);
+
+    // Setup the references between decks
+    deckGUI1.setOtherDeck(&deckGUI2);
+    deckGUI2.setOtherDeck(&deckGUI1);
 
     // Request audio permissions if needed
-    if (juce::RuntimePermissions::isRequired(juce::RuntimePermissions::recordAudio)
-        && !juce::RuntimePermissions::isGranted(juce::RuntimePermissions::recordAudio))
+    if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
+        && ! juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
     {
-        juce::RuntimePermissions::request(juce::RuntimePermissions::recordAudio,
-                                           [&] (bool granted) { setAudioChannels(granted ? 2 : 0, 2); });
+        juce::RuntimePermissions::request (juce::RuntimePermissions::recordAudio,
+                                           [&] (bool granted) { setAudioChannels (granted ? 2 : 0, 2); });
     }
     else
     {
-        setAudioChannels(0, 2); // Setup audio channels
+        setAudioChannels (0, 2); // Setup audio channels
     }
     
     // Add components to the visible area
@@ -28,10 +31,6 @@ MainComponent::MainComponent()
     addAndMakeVisible(deckGUI2);
     addAndMakeVisible(playlistComponent);
     addAndMakeVisible(equalizerComponent);
-
-    // Set each deck's reference to the other
-    deckGUI1.setOtherDeck(&deckGUI2);
-    deckGUI2.setOtherDeck(&deckGUI1);
 
     // Register basic audio formats
     formatManager.registerBasicFormats();

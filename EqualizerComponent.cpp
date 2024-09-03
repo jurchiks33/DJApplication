@@ -78,6 +78,45 @@ void EqualizerComponent::resized()
     bpmSlider.setBounds(buttonArea.removeFromTop(40).reduced(10)); // Place BPM slider under reset button
 }
 
+//void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
+//{
+//    auto sampleRate = 44100.0;
+//
+//    if (slider == &bassSlider)
+//    {
+//        updateFilter(bassFilter, juce::dsp::IIR::Coefficients<float>::makeLowShelf(sampleRate, 60.0f, 0.707f, juce::Decibels::decibelsToGain(bassSlider.getValue())));
+//    }
+//    else if (slider == &lowMidSlider)
+//    {
+//        updateFilter(lowMidFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 250.0f, 0.707f, juce::Decibels::decibelsToGain(lowMidSlider.getValue())));
+//    }
+//    else if (slider == &midSlider)
+//    {
+//        updateFilter(midFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 500.0f, 0.707f, juce::Decibels::decibelsToGain(midSlider.getValue())));
+//    }
+//    else if (slider == &highMidSlider)
+//    {
+//        updateFilter(highMidFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(highMidSlider.getValue())));
+//    }
+//    else if (slider == &trebleSlider)
+//    {
+//        updateFilter(trebleFilter, juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(trebleSlider.getValue())));
+//    }
+//    else if (slider == &presenceSlider)
+//    {
+//        updateFilter(presenceFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(presenceSlider.getValue())));
+//    }
+//    else if (slider == &brillianceSlider)
+//    {
+//        updateFilter(brillianceFilter, juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(brillianceSlider.getValue())));
+//    }
+//    else if (slider == &bpmSlider) // Handle BPM slider changes
+//    {
+//        // Logic to handle BPM change if needed
+//        std::cout << "BPM set to " << bpmSlider.getValue() << std::endl;
+//    }
+//}
+
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
 {
     auto sampleRate = 44100.0;
@@ -112,10 +151,16 @@ void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
     }
     else if (slider == &bpmSlider) // Handle BPM slider changes
     {
-        // Logic to handle BPM change if needed
         std::cout << "BPM set to " << bpmSlider.getValue() << std::endl;
+        
+        // Update the player's BPM if accessible here
+        if (player) // Assuming player is a member or passed reference
+        {
+            player->setBPM(bpmSlider.getValue());
+        }
     }
 }
+
 
 void EqualizerComponent::buttonClicked(juce::Button* button)
 {
