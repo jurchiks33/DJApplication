@@ -131,7 +131,7 @@ double DJAudioPlayer::getBPM() const
 
 void DJAudioPlayer::syncBPM()
 {
-    double referenceBPM = 120.0; // This could be from another player, for example
+    double referenceBPM = 120.0; 
     double currentBPM = getBPM();
     if (currentBPM > 0)
     {

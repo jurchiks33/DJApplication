@@ -159,6 +159,3 @@ void DeckGUI::loadTrack(const juce::URL& audioURL)
     player->loadURL(audioURL);
     waveformDisplay.loadURL(audioURL);
 }
-
-
-//----------------------------------------
