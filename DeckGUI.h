@@ -31,6 +31,7 @@ public:
     
     //---------------------------------------
     void loadTrack(const juce::String& trackName);
+    void loadTrack(const juce::URL& audioURL);
     
     //---------------------------------------
 

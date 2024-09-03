@@ -71,7 +71,7 @@ class PlaylistComponent : public juce::Component,
                           public juce::Button::Listener
 {
 public:
-    PlaylistComponent(DeckGUI* deck1, DeckGUI* deck2); // Add DeckGUI pointers
+    PlaylistComponent(DeckGUI* deck1, DeckGUI* deck2); // Constructor with DeckGUI pointers
     ~PlaylistComponent() override;
 
     void paint(juce::Graphics&) override;
@@ -99,12 +99,14 @@ public:
 
     void buttonClicked(juce::Button* button) override;
 
-    void loadPlaylist(); // New method to load playlist
+    void loadPlaylist(); // Method to load playlist
 
 private:
     juce::TableListBox tableComponent;
-    std::vector<std::string> trackTitles;
+    std::vector<std::string> trackTitles; // To store track titles
     std::vector<juce::URL> trackUrls; // To store track URLs
+
+    std::unique_ptr<juce::TextButton> loadPlaylistButton; // Unique pointer for the Load Playlist button
 
     DeckGUI* deck1; // Pointers to DeckGUIs
     DeckGUI* deck2;

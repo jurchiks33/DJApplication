@@ -137,10 +137,28 @@ void DeckGUI::timerCallback()
 //----------------------------------------
 void DeckGUI::loadTrack(const juce::String& trackName)
 {
-    // Logic to load the track into the Deck
-    std::cout << "Loading track into Deck: " << trackName << std::endl;
-    // Assuming you have a mechanism to map track names to URLs or files
-    // player->loadURL(trackURL);  // Replace with actual loading logic
+    // Logic to find the corresponding URL for the given track name
+    juce::File audioFile(trackName);
+    
+    if (audioFile.existsAsFile())
+    {
+        juce::URL audioURL(audioFile);
+        player->loadURL(audioURL);
+        waveformDisplay.loadURL(audioURL);
+        std::cout << "Loading track into Deck: " << trackName << std::endl;
+    }
+    else
+    {
+        std::cout << "File does not exist: " << trackName << std::endl;
+    }
 }
+
+
+void DeckGUI::loadTrack(const juce::URL& audioURL)
+{
+    player->loadURL(audioURL);
+    waveformDisplay.loadURL(audioURL);
+}
+
 
 //----------------------------------------
