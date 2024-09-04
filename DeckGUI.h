@@ -44,7 +44,6 @@
 //private:
 //    juce::TextButton playButton{"PLAY"};
 //    juce::TextButton stopButton{"STOP"};
-//    juce::TextButton loadButton{"LOAD"};
 //    juce::TextButton syncButton{"SYNC"};
 //    
 //    juce::Slider volSlider;
@@ -55,14 +54,11 @@
 //    
 //    WaveformDisplay waveformDisplay;
 //    
-//    juce::FileChooser fChooser {"Please select a file..."};
-//    
 //    DeckGUI* deck2 = nullptr; // Pointer to the other deck instance
 //
 //    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)
 //};
-
-
+//
 
 // DeckGUI.h
 
@@ -103,12 +99,18 @@ public:
 
     // Getter for the player's BPM
     double getPlayerBPM() const { return player->getBPM(); }
+
     // Add a getter for the player's position if needed
     double getPlayerPosition() const { return player->getPositionRelative(); }
+
+    // Start and stop methods to control playback from PlaylistComponent
+    void start() { player->start(); }
+    void stop() { player->stop(); }
 
 private:
     juce::TextButton playButton{"PLAY"};
     juce::TextButton stopButton{"STOP"};
+    juce::TextButton loadButton{"LOAD"};
     juce::TextButton syncButton{"SYNC"};
     
     juce::Slider volSlider;
@@ -119,8 +121,11 @@ private:
     
     WaveformDisplay waveformDisplay;
     
+    juce::FileChooser fChooser {"Please select a file..."};
+    
     DeckGUI* deck2 = nullptr; // Pointer to the other deck instance
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)
 };
+
 
