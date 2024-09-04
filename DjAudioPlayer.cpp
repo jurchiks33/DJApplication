@@ -147,3 +147,4 @@ void DJAudioPlayer::syncBPM()
         std::cout << "Syncing BPM to " << referenceBPM << std::endl;
     }
 }
+
