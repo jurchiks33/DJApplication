@@ -141,25 +141,37 @@ MainComponent::~MainComponent()
 
 void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
+    // Check for valid sample rate and block size
+    if (samplesPerBlockExpected <= 0 || sampleRate <= 0.0) {
+        jassertfalse; // Invalid audio configuration
+        return;
+    }
+
     // Prepare all sources
     player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
     player2.prepareToPlay(samplesPerBlockExpected, sampleRate);
     mixerSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 
+    // Ensure preview player is correctly configured
+    if (playlistComponent.hasPreviewPlayer()) {
+        DJAudioPlayer* previewPlayer = playlistComponent.getPreviewPlayer();
+        if (previewPlayer) {
+            previewPlayer->prepareToPlay(samplesPerBlockExpected, sampleRate);
+            mixerSource.addInputSource(previewPlayer, false);
+        }
+    }
+
     // Add to mixer if not already added
     mixerSource.addInputSource(&player1, false);
     mixerSource.addInputSource(&player2, false);
-    mixerSource.addInputSource(playlistComponent.getPreviewPlayer(), false);
-
-    // Check if playlistComponent's previewPlayer needs to be added
-    if (playlistComponent.hasPreviewPlayer())
-    {
-        mixerSource.addInputSource(playlistComponent.getPreviewPlayer(), false);
-    }
 }
 
 void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
+    if (bufferToFill.buffer->getNumChannels() <= 0 || bufferToFill.buffer->getNumSamples() <= 0) {
+        bufferToFill.clearActiveBufferRegion();
+        return;
+    }
     // Get audio from the mixer source
     mixerSource.getNextAudioBlock(bufferToFill);
 }

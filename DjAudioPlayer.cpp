@@ -179,12 +179,23 @@ void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 
 void DJAudioPlayer::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
+    // Check if buffer is valid
+    if (bufferToFill.buffer->getNumChannels() <= 0 || bufferToFill.buffer->getNumSamples() <= 0) {
+        bufferToFill.clearActiveBufferRegion();
+        return;
+    }
+
     resampleSource.getNextAudioBlock(bufferToFill);
-    
-    if (equalizerComponent != nullptr)  // Check if the EqualizerComponent is set
-    {
+
+    if (equalizerComponent != nullptr) {
         juce::dsp::AudioBlock<float> block(*bufferToFill.buffer);
-        equalizerComponent->process(block);
+        
+        // Check the block validity
+        if (block.getNumChannels() > 0 && block.getNumSamples() > 0) {
+            equalizerComponent->process(block);
+        } else {
+            std::cout << "Invalid AudioBlock detected." << std::endl;
+        }
     }
 }
 

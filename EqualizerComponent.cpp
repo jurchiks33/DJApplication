@@ -332,7 +332,7 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
 void EqualizerComponent::process(juce::dsp::AudioBlock<float>& audioBlock)
 {
     auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
-    
+
     jassert(audioBlock.getNumChannels() > 0 && audioBlock.getNumSamples() > 0);
 
     // Safeguard: Check if filters are initialized before processing
