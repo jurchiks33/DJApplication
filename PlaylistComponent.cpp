@@ -226,15 +226,12 @@ PlaylistComponent::PlaylistComponent(DeckGUI* deck1GUI, DeckGUI* deck2GUI, juce:
     std::cout << "Load Playlist button added to PlaylistComponent." << std::endl;
 
     // Correct initialization: Ensure DJAudioPlayer and EqualizerComponent are correctly linked
+    auto previewEqualizer = std::make_unique<EqualizerComponent>(*previewPlayer);
     previewPlayer = std::make_unique<DJAudioPlayer>(formatManager, *previewEqualizer);
     previewPlayer->setEqualizerComponent(previewEqualizer.get());
     previewPlayer->setGain(0.7); // Set default gain for audibility
 
-    auto previewEqualizer = std::make_unique<EqualizerComponent>(*previewPlayer);
-    previewPlayer->setEqualizerComponent(previewEqualizer.get()); // Link the equalizer, if applicable
-
     // Add the previewPlayer to your audio output/mixer if not already added
-    // If using a mixer in MainComponent, ensure previewPlayer is added there
 }
 
 PlaylistComponent::~PlaylistComponent()

@@ -125,7 +125,6 @@ MainComponent::MainComponent()
         setAudioChannels(0, 2); // Ensure 2 output channels are set up
     }
 
-
     addAndMakeVisible(deckGUI1);
     addAndMakeVisible(deckGUI2);
     addAndMakeVisible(playlistComponent);
@@ -152,21 +151,18 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
     mixerSource.addInputSource(&player2, false);
     mixerSource.addInputSource(playlistComponent.getPreviewPlayer(), false);
 
-
     // Check if playlistComponent's previewPlayer needs to be added
-    if (playlistComponent->hasPreviewPlayer())
+    if (playlistComponent.hasPreviewPlayer())
     {
-        mixerSource.addInputSource(playlistComponent->getPreviewPlayer(), false);
+        mixerSource.addInputSource(playlistComponent.getPreviewPlayer(), false);
     }
 }
-
 
 void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     // Get audio from the mixer source
     mixerSource.getNextAudioBlock(bufferToFill);
 }
-
 
 void MainComponent::releaseResources()
 {

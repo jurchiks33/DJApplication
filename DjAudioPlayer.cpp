@@ -151,14 +151,19 @@
 
 
 
-//DjAudioPlayer.cpp
+/*
+  ==============================================================================
 
+    DjAudioPlayer.cpp
+
+  ==============================================================================
+*/
 #include "DjAudioPlayer.h"
-#include "EqualizerComponent.h"  // Include EqualizerComponent here
-#include <JuceHeader.h> // Include JUCE headers
+#include "EqualizerComponent.h"
+#include <JuceHeader.h>
 
 DJAudioPlayer::DJAudioPlayer(juce::AudioFormatManager& formatManager, EqualizerComponent& eqComponent)
-    : formatManager(formatManager), equalizerComponent(&eqComponent)  // Initialize with a reference
+    : formatManager(formatManager), equalizerComponent(&eqComponent)
 {
 }
 
@@ -309,4 +314,3 @@ void DJAudioPlayer::setEqualizerComponent(EqualizerComponent* eqComponent)
         equalizerComponent = eqComponent;
     }
 }
-
