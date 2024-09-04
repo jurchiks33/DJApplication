@@ -399,6 +399,13 @@ void PlaylistComponent::loadPlaylist()
             }
         }
 
+        // Safety: Ensure all pointers and objects used here are valid
+        if (!tableComponent.isValidComponent())
+        {
+            std::cout << "Table component is not valid!" << std::endl;
+            return; // Prevent accessing invalid components
+        }
+
         tableComponent.updateContent();
         tableComponent.repaint();
 
@@ -407,5 +414,6 @@ void PlaylistComponent::loadPlaylist()
 
     std::cout << "After launchAsync call." << std::endl;
 }
+
 
 

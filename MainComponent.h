@@ -46,20 +46,21 @@
 #include "PlaylistComponent.h"
 #include "EqualizerComponent.h"
 
-class MainComponent : public juce::AudioAppComponent
+class MainComponent  : public juce::AudioAppComponent
 {
 public:
     MainComponent();
     ~MainComponent() override;
 
-    void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
-    void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
+    void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
+    void getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
 
-    void paint(juce::Graphics& g) override;
+    void paint (juce::Graphics& g) override;
     void resized() override;
 
 private:
+    juce::AudioDeviceManager deviceManager; // Ensure proper usage of AudioDeviceManager
     juce::AudioFormatManager formatManager;
     juce::AudioThumbnailCache thumbCache{100};
 
@@ -74,7 +75,7 @@ private:
     juce::MixerAudioSource mixerSource;
     PlaylistComponent playlistComponent{&deckGUI1, &deckGUI2};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
 
 

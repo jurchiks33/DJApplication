@@ -90,6 +90,7 @@
 //}
 
 
+#include <JuceHeader.h>
 #include "MainComponent.h"
 
 //==============================================================================
@@ -107,38 +108,41 @@ MainComponent::MainComponent()
     deckGUI2.setOtherDeck(&deckGUI1);
 
     // Request audio permissions if needed
-    if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
-        && !juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
+    if (juce::RuntimePermissions::isRequired(juce::RuntimePermissions::recordAudio)
+        && !juce::RuntimePermissions::isGranted(juce::RuntimePermissions::recordAudio))
     {
-        juce::RuntimePermissions::request (juce::RuntimePermissions::recordAudio,
-                                           [&] (bool granted) {
-                                               if (granted) {
-                                                   setAudioChannels (0, 2);
-                                               } else {
-                                                   juce::Logger::writeToLog("Audio recording permission not granted.");
-                                                   juce::NativeMessageBox::showMessageBoxAsync(
-                                                       juce::AlertWindow::WarningIcon,
-                                                       "Audio Permission",
-                                                       "Audio recording permission was not granted.");
-                                               }
-                                           });
+        juce::RuntimePermissions::request(juce::RuntimePermissions::recordAudio,
+            [&](bool granted) {
+                if (granted)
+                {
+                    juce::String error = deviceManager.initialiseWithDefaultDevices(0, 2); // 0 input channels, 2 output channels
+                    if (!error.isEmpty())
+                    {
+                        juce::Logger::writeToLog("Error initializing audio channels: " + error);
+                        juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon,
+                                                               "Audio Initialization Error",
+                                                               "Failed to initialize audio: " + error);
+                    }
+                }
+                else
+                {
+                    juce::Logger::writeToLog("Audio permissions not granted.");
+                }
+            });
     }
     else
     {
-        try
+        // Initialize audio channels with proper error handling
+        juce::String error = deviceManager.initialise(0, 2, nullptr, true); // Correct initialization
+        if (!error.isEmpty())
         {
-            setAudioChannels(0, 2); // Setup audio channels
-        }
-        catch (const std::exception& e)
-        {
-            juce::Logger::writeToLog("Error initializing audio channels: " + juce::String(e.what()));
-            juce::NativeMessageBox::showMessageBoxAsync(
-                juce::AlertWindow::WarningIcon,
-                "Audio Initialization Error",
-                "Failed to initialize audio: " + juce::String(e.what()));
+            juce::Logger::writeToLog("Error initializing audio channels: " + error);
+            juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon,
+                                                   "Audio Initialization Error",
+                                                   "Failed to initialize audio: " + error);
         }
     }
-
+    
     // Add components to the visible area
     addAndMakeVisible(deckGUI1);
     addAndMakeVisible(deckGUI2);
@@ -190,14 +194,14 @@ void MainComponent::resized()
 {
     // Calculate component heights based on the window height
     auto deckHeight = getHeight() / 3;
-
+    
     // Set bounds for Deck GUI components
     deckGUI1.setBounds(0, 0, getWidth() / 2, deckHeight);
     deckGUI2.setBounds(getWidth() / 2, 0, getWidth() / 2, deckHeight);
-
+    
     // Set bounds for the Equalizer component
     equalizerComponent.setBounds(0, deckHeight, getWidth(), deckHeight);
-
+    
     // Set bounds for the Playlist component
     playlistComponent.setBounds(0, deckHeight * 2, getWidth(), deckHeight);
 }
