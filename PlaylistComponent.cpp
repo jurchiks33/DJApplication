@@ -378,6 +378,13 @@ void PlaylistComponent::loadPlaylist()
     {
         std::cout << "FileChooser callback triggered." << std::endl;
 
+        // Check if the component is still valid and on the message thread
+        if (!juce::MessageManager::getInstance()->isThisTheMessageThread())
+        {
+            std::cerr << "Not on the message thread!" << std::endl;
+            return;
+        }
+
         auto results = fc.getResults();
         if (results.isEmpty())
         {
@@ -399,11 +406,11 @@ void PlaylistComponent::loadPlaylist()
             }
         }
 
-        // Safety: Ensure all pointers and objects used here are valid
-        if (!tableComponent.isValidComponent())
+        // Check if the tableComponent pointer is still valid
+        if (!this)
         {
-            std::cout << "Table component is not valid!" << std::endl;
-            return; // Prevent accessing invalid components
+            std::cerr << "PlaylistComponent is no longer valid." << std::endl;
+            return;
         }
 
         tableComponent.updateContent();
