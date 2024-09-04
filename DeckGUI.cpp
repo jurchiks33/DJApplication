@@ -41,16 +41,28 @@ DeckGUI::~DeckGUI()
     stopTimer();
 }
 
-void DeckGUI::paint (juce::Graphics& g)
+//void DeckGUI::paint (juce::Graphics& g)
+//{
+//    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
+//    g.setColour (juce::Colours::grey);
+//    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
+//    g.setColour (juce::Colours::white);
+//    g.setFont(juce::Font(14.0f)); // Correct font usage
+//    g.drawText ("DeckGUI", getLocalBounds(),
+//                juce::Justification::centred, true);   // draw some placeholder text
+//}
+
+void DeckGUI::paint(juce::Graphics& g)
 {
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
-    g.setColour (juce::Colours::grey);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-    g.setColour (juce::Colours::white);
-    g.setFont(juce::Font(14.0f)); // Correct font usage
-    g.drawText ("DeckGUI", getLocalBounds(),
-                juce::Justification::centred, true);   // draw some placeholder text
+    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+    g.setColour(juce::Colours::grey);
+    g.drawRect(getLocalBounds(), 1);
+    g.setColour(juce::Colours::white);
+    g.setFont(juce::Font(juce::FontOptions(14.0f)));
+    g.drawText("DeckGUI", getLocalBounds(),
+               juce::Justification::centred, true);
 }
+
 
 void DeckGUI::resized()
 {
@@ -96,11 +108,29 @@ void DeckGUI::buttonClicked(juce::Button* button)
     }
 }
 
+//void DeckGUI::sliderValueChanged(juce::Slider* slider)
+//{
+//    if (slider == &volSlider)
+//    {
+//        player->setGain(slider->getValue());
+//    }
+//    else if (slider == &speedSlider)
+//    {
+//        player->setSpeed(slider->getValue());
+//    }
+//    else if (slider == &posSlider)
+//    {
+//        player->setPositionRelative(slider->getValue());
+//    }
+//}
+
 void DeckGUI::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &volSlider)
     {
-        player->setGain(slider->getValue());
+        double gainValue = slider->getValue();
+        player->setGain(gainValue);
+        std::cout << "Volume slider set to: " << gainValue << std::endl;
     }
     else if (slider == &speedSlider)
     {
@@ -111,6 +141,7 @@ void DeckGUI::sliderValueChanged(juce::Slider* slider)
         player->setPositionRelative(slider->getValue());
     }
 }
+
 
 bool DeckGUI::isInterestedInFileDrag(const juce::StringArray &files)
 {
