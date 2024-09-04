@@ -1,3 +1,95 @@
+//#include "MainComponent.h"
+//
+////==============================================================================
+//MainComponent::MainComponent()
+//    : player1(formatManager, equalizerComponent),
+//      player2(formatManager, equalizerComponent),
+//      deckGUI1(&player1, formatManager, thumbCache),
+//      deckGUI2(&player2, formatManager, thumbCache),
+//      playlistComponent(&deckGUI1, &deckGUI2)
+//{
+//    setSize (800, 600);
+//
+//    // Setup the references between decks
+//    deckGUI1.setOtherDeck(&deckGUI2);
+//    deckGUI2.setOtherDeck(&deckGUI1);
+//
+//    // Request audio permissions if needed
+//    if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
+//        && ! juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
+//    {
+//        juce::RuntimePermissions::request (juce::RuntimePermissions::recordAudio,
+//                                           [&] (bool granted) { setAudioChannels (granted ? 2 : 0, 2); });
+//    }
+//    else
+//    {
+//        setAudioChannels (0, 2); // Setup audio channels
+//    }
+//    
+//    // Add components to the visible area
+//    addAndMakeVisible(deckGUI1);
+//    addAndMakeVisible(deckGUI2);
+//    addAndMakeVisible(playlistComponent);
+//    addAndMakeVisible(equalizerComponent);
+//
+//    // Register basic audio formats
+//    formatManager.registerBasicFormats();
+//}
+//
+//MainComponent::~MainComponent()
+//{
+//    shutdownAudio(); // Clean up audio resources
+//}
+//
+//void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
+//{
+//    // Prepare players and mixer for audio playback
+//    player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
+//    player2.prepareToPlay(samplesPerBlockExpected, sampleRate);
+//    mixerSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+//
+//    // Add input sources to the mixer; ensure the second argument is false (not owning sources)
+//    mixerSource.addInputSource(&player1, false);
+//    mixerSource.addInputSource(&player2, false);
+//}
+//
+//void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
+//{
+//    // Fill the audio buffer from the mixer source
+//    mixerSource.getNextAudioBlock(bufferToFill);
+//}
+//
+//void MainComponent::releaseResources()
+//{
+//    // Release resources for players and mixer
+//    player1.releaseResources();
+//    player2.releaseResources();
+//    mixerSource.releaseResources();
+//}
+//
+//void MainComponent::paint(juce::Graphics& g)
+//{
+//    // Fill background with the look and feel color
+//    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+//}
+//
+//void MainComponent::resized()
+//{
+//    // Calculate component heights based on the window height
+//    auto deckHeight = getHeight() / 3;
+//    
+//    // Set bounds for Deck GUI components
+//    deckGUI1.setBounds(0, 0, getWidth() / 2, deckHeight);
+//    deckGUI2.setBounds(getWidth() / 2, 0, getWidth() / 2, deckHeight);
+//    
+//    // Set bounds for the Equalizer component
+//    equalizerComponent.setBounds(0, deckHeight, getWidth(), deckHeight);
+//    
+//    // Set bounds for the Playlist component
+//    playlistComponent.setBounds(0, deckHeight * 2, getWidth(), deckHeight);
+//}
+
+
 #include "MainComponent.h"
 
 //==============================================================================
@@ -16,16 +108,37 @@ MainComponent::MainComponent()
 
     // Request audio permissions if needed
     if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
-        && ! juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
+        && !juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
     {
         juce::RuntimePermissions::request (juce::RuntimePermissions::recordAudio,
-                                           [&] (bool granted) { setAudioChannels (granted ? 2 : 0, 2); });
+                                           [&] (bool granted) {
+                                               if (granted) {
+                                                   setAudioChannels (0, 2);
+                                               } else {
+                                                   juce::Logger::writeToLog("Audio recording permission not granted.");
+                                                   juce::NativeMessageBox::showMessageBoxAsync(
+                                                       juce::AlertWindow::WarningIcon,
+                                                       "Audio Permission",
+                                                       "Audio recording permission was not granted.");
+                                               }
+                                           });
     }
     else
     {
-        setAudioChannels (0, 2); // Setup audio channels
+        try
+        {
+            setAudioChannels(0, 2); // Setup audio channels
+        }
+        catch (const std::exception& e)
+        {
+            juce::Logger::writeToLog("Error initializing audio channels: " + juce::String(e.what()));
+            juce::NativeMessageBox::showMessageBoxAsync(
+                juce::AlertWindow::WarningIcon,
+                "Audio Initialization Error",
+                "Failed to initialize audio: " + juce::String(e.what()));
+        }
     }
-    
+
     // Add components to the visible area
     addAndMakeVisible(deckGUI1);
     addAndMakeVisible(deckGUI2);
@@ -77,14 +190,14 @@ void MainComponent::resized()
 {
     // Calculate component heights based on the window height
     auto deckHeight = getHeight() / 3;
-    
+
     // Set bounds for Deck GUI components
     deckGUI1.setBounds(0, 0, getWidth() / 2, deckHeight);
     deckGUI2.setBounds(getWidth() / 2, 0, getWidth() / 2, deckHeight);
-    
+
     // Set bounds for the Equalizer component
     equalizerComponent.setBounds(0, deckHeight, getWidth(), deckHeight);
-    
+
     // Set bounds for the Playlist component
     playlistComponent.setBounds(0, deckHeight * 2, getWidth(), deckHeight);
 }
