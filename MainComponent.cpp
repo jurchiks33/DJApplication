@@ -47,8 +47,8 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
     player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
     player2.prepareToPlay(samplesPerBlockExpected, sampleRate);
     mixerSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
-    
-    // Add input sources to the mixer
+
+    // Add input sources to the mixer; ensure the second argument is false (not owning sources)
     mixerSource.addInputSource(&player1, false);
     mixerSource.addInputSource(&player2, false);
 }

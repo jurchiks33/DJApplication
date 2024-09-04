@@ -52,12 +52,17 @@ void DJAudioPlayer::loadURL(juce::URL audioURL)
             transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
             readerSource = std::move(newSource);
         }
+        else
+        {
+            std::cout << "Failed to create reader for the input stream." << std::endl;
+        }
     }
     else
     {
         std::cout << "Failed to create input stream from URL." << std::endl;
     }
 }
+
 
 void DJAudioPlayer::setGain(double gain)
 {

@@ -30,6 +30,8 @@ public:
     void process(juce::dsp::AudioBlock<float>& audioBlock);
 
 private:
+    DJAudioPlayer& player;  // Reference to DJAudioPlayer (move to the correct position)
+
     // Sliders
     juce::Slider bassSlider;
     juce::Slider lowMidSlider;
@@ -52,8 +54,6 @@ private:
     juce::dsp::IIR::Filter<float> trebleFilter;
     juce::dsp::IIR::Filter<float> presenceFilter;
     juce::dsp::IIR::Filter<float> brillianceFilter;
-
-    DJAudioPlayer& player;  // Reference to DJAudioPlayer
 
     // Helper functions
     void setupSlider(juce::Slider& slider, const juce::String& name);
