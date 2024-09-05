@@ -1,14 +1,9 @@
 
-//    PlaylistComponent.cpp
+//PlaylistComponent.cpp
 
 #include <JuceHeader.h>
 #include "PlaylistComponent.h"
 #include "DeckGUI.h"
-
-// Include headers necessary for file operations
-#include <fstream>
-#include <sstream>
-
 
 // Constructor
 PlaylistComponent::PlaylistComponent(DeckGUI* deck1GUI, DeckGUI* deck2GUI)
@@ -17,8 +12,7 @@ PlaylistComponent::PlaylistComponent(DeckGUI* deck1GUI, DeckGUI* deck2GUI)
     std::cout << "Initializing PlaylistComponent..." << std::endl;
 
     tableComponent.getHeader().addColumn("Track title", 1, 400);
-    tableComponent.getHeader().addColumn("Play", 2, 100); // Column for Play button
-    tableComponent.getHeader().addColumn("Deck", 3, 200); // Column for Deck buttons
+    tableComponent.getHeader().addColumn("Deck", 2, 200); // Only keep Deck buttons column
 
     tableComponent.setModel(this);
     addAndMakeVisible(tableComponent);
@@ -71,7 +65,7 @@ void PlaylistComponent::paintRowBackground(juce::Graphics& g, int rowNumber, int
 
 void PlaylistComponent::paintCell(juce::Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
-    if (columnId == 1)
+    if (columnId == 1) // Track title column
     {
         g.drawText(trackTitles[rowNumber],
                    2, 0,
@@ -83,18 +77,7 @@ void PlaylistComponent::paintCell(juce::Graphics& g, int rowNumber, int columnId
 
 juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, juce::Component* existingComponentToUpdate)
 {
-    if (columnId == 2) // Play button column
-    {
-        if (existingComponentToUpdate == nullptr)
-        {
-            auto* playButton = new juce::TextButton{"Play"};
-            playButton->setComponentID("play_" + std::to_string(rowNumber));
-            playButton->addListener(this);
-            existingComponentToUpdate = playButton;
-            std::cout << "Created Play button for row " << rowNumber << std::endl;
-        }
-    }
-    else if (columnId == 3) // Deck buttons column
+    if (columnId == 2) // Deck buttons column
     {
         if (existingComponentToUpdate == nullptr)
         {
@@ -126,11 +109,7 @@ void PlaylistComponent::buttonClicked(juce::Button* button)
     auto id = button->getComponentID().toStdString();
     auto rowIndex = std::stoi(id.substr(id.find('_') + 1));
 
-    if (id.find("play_") != std::string::npos)
-    {
-        std::cout << "Playing: " << trackTitles[rowIndex] << std::endl;
-    }
-    else if (id.find("deck1_") != std::string::npos)
+    if (id.find("deck1_") != std::string::npos)
     {
         deck1->loadTrack(trackUrls[rowIndex]); // Implement loadTrack in DeckGUI
         std::cout << "Loaded on Deck 1: " << trackTitles[rowIndex] << std::endl;
@@ -142,12 +121,10 @@ void PlaylistComponent::buttonClicked(juce::Button* button)
     }
 }
 
-// PlaylistComponent.cpp
 void PlaylistComponent::loadPlaylist()
 {
     std::cout << "Starting loadPlaylist function." << std::endl;
 
-    // Use the member FileChooser instance
     chooser = std::make_unique<juce::FileChooser>(
         "Select Audio Files",
         juce::File::getSpecialLocation(juce::File::userMusicDirectory),
@@ -193,3 +170,4 @@ void PlaylistComponent::loadPlaylist()
 
     std::cout << "After launchAsync call." << std::endl;
 }
+
