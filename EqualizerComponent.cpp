@@ -7,15 +7,16 @@
   ==============================================================================
 */
 
-
 #include "EqualizerComponent.h"
-#include "DjAudioPlayer.h"  // Include DJAudioPlayer here
-#include <JuceHeader.h> // Include the DJAudioPlayer header
+#include "DjAudioPlayer.h"
+#include <JuceHeader.h>
 
 EqualizerComponent::EqualizerComponent(DJAudioPlayer& playerRef)
-    : player(playerRef), // Ensure this is initialized before other members if it comes first in the header declaration
-      bypassButton("Bypass"), resetButton("Reset")
+    : player(playerRef), // Initialize the player reference
+      bypassButton("Bypass"), resetButton("Reset"),
+      rockPresetButton("Rock"), jazzPresetButton("Jazz"), classicalPresetButton("Classical") // Initialize preset buttons
 {
+    // Setup sliders for EQ bands
     setupSlider(bassSlider, "Bass (60 Hz)");
     setupSlider(lowMidSlider, "Low-Mid (250 Hz)");
     setupSlider(midSlider, "Mid (500 Hz)");
@@ -24,16 +25,15 @@ EqualizerComponent::EqualizerComponent(DJAudioPlayer& playerRef)
     setupSlider(presenceSlider, "Presence (4 kHz)");
     setupSlider(brillianceSlider, "Brilliance (8 kHz)");
 
-    // Setup bypass button with initial color
+    // Setup bypass and reset buttons
     bypassButton.setClickingTogglesState(true);
     bypassButton.setButtonText("Bypass");
     bypassButton.addListener(this);
     addAndMakeVisible(bypassButton);
-    updateBypassButtonColor(); // Initial color setup
+    updateBypassButtonColor();
 
-    // Setup reset button and set its color to light red
     resetButton.setButtonText("Reset");
-    resetButton.setColour(juce::TextButton::buttonColourId, juce::Colours::lightcoral); // Light red color
+    resetButton.setColour(juce::TextButton::buttonColourId, juce::Colours::lightcoral);
     resetButton.addListener(this);
     addAndMakeVisible(resetButton);
 
@@ -41,18 +41,24 @@ EqualizerComponent::EqualizerComponent(DJAudioPlayer& playerRef)
     bpmSlider.setSliderStyle(juce::Slider::LinearHorizontal);
     bpmSlider.setRange(60.0, 200.0);
     bpmSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
-    bpmSlider.setValue(120.0); // Default value
+    bpmSlider.setValue(120.0);
     bpmSlider.addListener(this);
     bpmSlider.setName("BPM");
     addAndMakeVisible(bpmSlider);
 
-    // Initialize filters
+    // Setup preset buttons
+    rockPresetButton.addListener(this);
+    jazzPresetButton.addListener(this);
+    classicalPresetButton.addListener(this);
+
+    addAndMakeVisible(rockPresetButton);
+    addAndMakeVisible(jazzPresetButton);
+    addAndMakeVisible(classicalPresetButton);
+
     initializeFilters();
 }
 
-EqualizerComponent::~EqualizerComponent()
-{
-}
+EqualizerComponent::~EqualizerComponent() = default;
 
 void EqualizerComponent::paint(juce::Graphics& g)
 {
@@ -82,6 +88,11 @@ void EqualizerComponent::resized()
     bypassButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
     resetButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
     bpmSlider.setBounds(buttonArea.removeFromTop(60).reduced(10));
+
+    // Position preset buttons below BPM slider
+    rockPresetButton.setBounds(buttonArea.removeFromTop(30).reduced(5));
+    jazzPresetButton.setBounds(buttonArea.removeFromTop(30).reduced(5));
+    classicalPresetButton.setBounds(buttonArea.removeFromTop(30).reduced(5));
 }
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
@@ -129,20 +140,13 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
 {
     if (button == &bypassButton)
     {
-        // Toggle bypass state
         isBypassed = bypassButton.getToggleState();
-        
-        // Update the button color explicitly
         updateBypassButtonColor();
-
-        // Ensure the button's color is set correctly for its state
-        bypassButton.repaint(); // Force repaint to apply color changes
-
+        bypassButton.repaint();
         std::cout << (isBypassed ? "EQ Bypassed" : "EQ Enabled") << std::endl;
     }
     else if (button == &resetButton)
     {
-        // Reset sliders and BPM slider
         bassSlider.setValue(0.0);
         lowMidSlider.setValue(0.0);
         midSlider.setValue(0.0);
@@ -150,50 +154,61 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
         trebleSlider.setValue(0.0);
         presenceSlider.setValue(0.0);
         brillianceSlider.setValue(0.0);
-        bpmSlider.setValue(120.0); // Reset BPM slider to default
-        
+        bpmSlider.setValue(120.0);
         std::cout << "EQ Reset to default" << std::endl;
     }
+    else if (button == &rockPresetButton)
+    {
+        applyPreset(0); // Apply Rock preset
+    }
+    else if (button == &jazzPresetButton)
+    {
+        applyPreset(1); // Apply Jazz preset
+    }
+    else if (button == &classicalPresetButton)
+    {
+        applyPreset(2); // Apply Classical preset
+    }
 }
 
-void EqualizerComponent::updateBypassButtonColor()
+void EqualizerComponent::applyPreset(int presetType)
 {
-    // Explicitly set the colors to avoid conflicts
-    if (isBypassed)
+    switch (presetType)
     {
-        // Set light red when active
-        bypassButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::lightcoral);
-        bypassButton.setColour(juce::TextButton::buttonColourId, juce::Colours::lightcoral);
+        case 0: // Rock Preset
+            bassSlider.setValue(6.0);
+            lowMidSlider.setValue(4.0);
+            midSlider.setValue(-2.0);
+            highMidSlider.setValue(2.0);
+            trebleSlider.setValue(3.0);
+            presenceSlider.setValue(5.0);
+            brillianceSlider.setValue(4.0);
+            break;
+
+        case 1: // Jazz Preset
+            bassSlider.setValue(2.0);
+            lowMidSlider.setValue(1.0);
+            midSlider.setValue(0.0);
+            highMidSlider.setValue(3.0);
+            trebleSlider.setValue(5.0);
+            presenceSlider.setValue(4.0);
+            brillianceSlider.setValue(6.0);
+            break;
+
+        case 2: // Classical Preset
+            bassSlider.setValue(0.0);
+            lowMidSlider.setValue(0.0);
+            midSlider.setValue(1.0);
+            highMidSlider.setValue(1.0);
+            trebleSlider.setValue(0.0);
+            presenceSlider.setValue(0.0);
+            brillianceSlider.setValue(0.0);
+            break;
+
+        default:
+            break;
     }
-    else
-    {
-        // Set light green when inactive
-        bypassButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::lightgreen);
-        bypassButton.setColour(juce::TextButton::buttonColourId, juce::Colours::lightgreen);
-    }
-    
-    // Force repaint to ensure the color is updated immediately
-    bypassButton.repaint();
-}
-
-
-void EqualizerComponent::process(juce::dsp::AudioBlock<float>& audioBlock)
-{
-    if (isBypassed)
-        return; // Skip processing if bypassed
-
-    auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
-    
-    jassert(audioBlock.getNumChannels() > 0 && audioBlock.getNumSamples() > 0);
-
-    // Process each filter in order
-    bassFilter.process(context);
-    lowMidFilter.process(context);
-    midFilter.process(context);
-    highMidFilter.process(context);
-    trebleFilter.process(context);
-    presenceFilter.process(context);
-    brillianceFilter.process(context);
+    std::cout << "Preset applied: " << (presetType == 0 ? "Rock" : presetType == 1 ? "Jazz" : "Classical") << std::endl;
 }
 
 void EqualizerComponent::setupSlider(juce::Slider& slider, const juce::String& name)
@@ -224,4 +239,39 @@ void EqualizerComponent::updateFilter(juce::dsp::IIR::Filter<float>& filter, con
     {
         filter.coefficients = coefficients;
     }
+}
+
+void EqualizerComponent::updateBypassButtonColor()
+{
+    if (isBypassed)
+    {
+        bypassButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::lightcoral);
+        bypassButton.setColour(juce::TextButton::buttonColourId, juce::Colours::lightcoral);
+    }
+    else
+    {
+        bypassButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::lightgreen);
+        bypassButton.setColour(juce::TextButton::buttonColourId, juce::Colours::lightgreen);
+    }
+    
+    bypassButton.repaint();
+}
+
+void EqualizerComponent::process(juce::dsp::AudioBlock<float>& audioBlock)
+{
+    if (isBypassed)
+        return; // Skip processing if bypassed
+
+    auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
+    
+    jassert(audioBlock.getNumChannels() > 0 && audioBlock.getNumSamples() > 0);
+
+    // Process each filter in order
+    bassFilter.process(context);
+    lowMidFilter.process(context);
+    midFilter.process(context);
+    highMidFilter.process(context);
+    trebleFilter.process(context);
+    presenceFilter.process(context);
+    brillianceFilter.process(context);
 }

@@ -12,7 +12,7 @@
 #include <JuceHeader.h>
 #include <juce_dsp/juce_dsp.h>
 
-class DJAudioPlayer;
+class DJAudioPlayer;  // Forward declaration to avoid circular dependencies
 
 class EqualizerComponent : public juce::Component,
                            public juce::Slider::Listener,
@@ -29,10 +29,14 @@ public:
     void buttonClicked(juce::Button* button) override;
 
     void process(juce::dsp::AudioBlock<float>& audioBlock);
-    
+
 private:
     void updateBypassButtonColor();
-    
+    void setupSlider(juce::Slider& slider, const juce::String& name);
+    void initializeFilters();
+    void updateFilter(juce::dsp::IIR::Filter<float>& filter, const juce::dsp::IIR::Coefficients<float>::Ptr& coefficients);
+    void applyPreset(int presetType);
+
     DJAudioPlayer& player;
 
     // Sliders
@@ -48,6 +52,9 @@ private:
     // Buttons
     juce::TextButton bypassButton;
     juce::TextButton resetButton;
+    juce::TextButton rockPresetButton;
+    juce::TextButton jazzPresetButton;
+    juce::TextButton classicalPresetButton;
 
     // Filters
     juce::dsp::IIR::Filter<float> bassFilter;
@@ -60,11 +67,5 @@ private:
 
     bool isBypassed = false; // Flag for bypassing all filters
 
-    void setupSlider(juce::Slider& slider, const juce::String& name);
-    void initializeFilters();
-    void updateFilter(juce::dsp::IIR::Filter<float>& filter, const juce::dsp::IIR::Coefficients<float>::Ptr& coefficients);
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EqualizerComponent)
 };
-
-
