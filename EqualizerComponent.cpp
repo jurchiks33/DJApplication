@@ -76,7 +76,8 @@ void EqualizerComponent::resized()
     auto buttonArea = area.removeFromRight(area.getWidth());
     bypassButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
     resetButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
-    bpmSlider.setBounds(buttonArea.removeFromTop(40).reduced(10));
+    //bpmSlider.setBounds(buttonArea.removeFromTop(40).reduced(10));
+    bpmSlider.setBounds(buttonArea.removeFromTop(60).reduced(10));
 }
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
