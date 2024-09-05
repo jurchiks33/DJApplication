@@ -1,4 +1,3 @@
-
 //PlaylistComponent.cpp
 
 #include <JuceHeader.h>
@@ -11,8 +10,9 @@ PlaylistComponent::PlaylistComponent(DeckGUI* deck1GUI, DeckGUI* deck2GUI)
 {
     std::cout << "Initializing PlaylistComponent..." << std::endl;
 
-    tableComponent.getHeader().addColumn("Track title", 1, 400);
-    tableComponent.getHeader().addColumn("Deck", 2, 200); // Only keep Deck buttons column
+    // Setup only two columns: Track title and Deck
+    tableComponent.getHeader().addColumn("Track title", 1, 500); // Adjust width as needed
+    tableComponent.getHeader().addColumn("Deck", 2, 300);        // Adjust width as needed
 
     tableComponent.setModel(this);
     addAndMakeVisible(tableComponent);
@@ -170,4 +170,3 @@ void PlaylistComponent::loadPlaylist()
 
     std::cout << "After launchAsync call." << std::endl;
 }
-
