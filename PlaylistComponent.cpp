@@ -1,3 +1,4 @@
+
 //PlaylistComponent.cpp
 
 #include <JuceHeader.h>
@@ -86,13 +87,13 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
             auto* deck1Button = new juce::TextButton{"Deck 1"};
             deck1Button->setComponentID("deck1_" + std::to_string(rowNumber));
             deck1Button->addListener(this);
-            deck1Button->setBounds(0, 0, 90, 25);
+            deck1Button->setBounds(0, 0, 90, 20); // Adjusted height to 20
             deckButtonContainer->addAndMakeVisible(deck1Button);
 
             auto* deck2Button = new juce::TextButton{"Deck 2"};
             deck2Button->setComponentID("deck2_" + std::to_string(rowNumber));
             deck2Button->addListener(this);
-            deck2Button->setBounds(100, 0, 90, 25);
+            deck2Button->setBounds(100, 0, 90, 20); // Adjusted height to 20
             deckButtonContainer->addAndMakeVisible(deck2Button);
 
             existingComponentToUpdate = deckButtonContainer;
@@ -101,6 +102,7 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
     }
     return existingComponentToUpdate;
 }
+
 
 void PlaylistComponent::buttonClicked(juce::Button* button)
 {
