@@ -1,5 +1,6 @@
-
-//PlaylistComponent.cpp
+//
+////PlaylistComponent.cpp
+//
 
 #include <JuceHeader.h>
 #include "PlaylistComponent.h"
@@ -11,9 +12,10 @@ PlaylistComponent::PlaylistComponent(DeckGUI* deck1GUI, DeckGUI* deck2GUI)
 {
     std::cout << "Initializing PlaylistComponent..." << std::endl;
 
-    // Setup only two columns: Track title and Deck
+    // Setup columns: Track title, Deck, and Remove
     tableComponent.getHeader().addColumn("Track title", 1, 500); // Adjust width as needed
-    tableComponent.getHeader().addColumn("Deck", 2, 300);        // Adjust width as needed
+    tableComponent.getHeader().addColumn("Deck", 2, 200);        // Adjust width as needed
+    tableComponent.getHeader().addColumn("Remove", 3, 100);      // New column for remove button
 
     tableComponent.setModel(this);
     addAndMakeVisible(tableComponent);
@@ -87,22 +89,34 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
             auto* deck1Button = new juce::TextButton{"Deck 1"};
             deck1Button->setComponentID("deck1_" + std::to_string(rowNumber));
             deck1Button->addListener(this);
-            deck1Button->setBounds(0, 0, 90, 20); // Adjusted height to 20
+            deck1Button->setBounds(0, 0, 90, 20); // Adjust height
             deckButtonContainer->addAndMakeVisible(deck1Button);
 
             auto* deck2Button = new juce::TextButton{"Deck 2"};
             deck2Button->setComponentID("deck2_" + std::to_string(rowNumber));
             deck2Button->addListener(this);
-            deck2Button->setBounds(100, 0, 90, 20); // Adjusted height to 20
+            deck2Button->setBounds(100, 0, 90, 20); // Adjust height
             deckButtonContainer->addAndMakeVisible(deck2Button);
 
             existingComponentToUpdate = deckButtonContainer;
             std::cout << "Created Deck buttons for row " << rowNumber << std::endl;
         }
     }
+    else if (columnId == 3) // Remove column
+    {
+        if (existingComponentToUpdate == nullptr)
+        {
+            auto* removeButton = new juce::TextButton{"Remove"};
+            removeButton->setComponentID("remove_" + std::to_string(rowNumber));
+            removeButton->addListener(this);
+            removeButton->setBounds(0, 0, 60, 20); // Adjust dimensions as needed
+            existingComponentToUpdate = removeButton;
+            std::cout << "Created Remove button for row " << rowNumber << std::endl;
+        }
+    }
+
     return existingComponentToUpdate;
 }
-
 
 void PlaylistComponent::buttonClicked(juce::Button* button)
 {
@@ -120,6 +134,14 @@ void PlaylistComponent::buttonClicked(juce::Button* button)
     {
         deck2->loadTrack(trackUrls[rowIndex]); // Implement loadTrack in DeckGUI
         std::cout << "Loaded on Deck 2: " << trackTitles[rowIndex] << std::endl;
+    }
+    else if (id.find("remove_") != std::string::npos)
+    {
+        // Remove the track from the playlist
+        trackTitles.erase(trackTitles.begin() + rowIndex);
+        trackUrls.erase(trackUrls.begin() + rowIndex);
+        tableComponent.updateContent();
+        std::cout << "Removed track at index: " << rowIndex << std::endl;
     }
 }
 
@@ -172,3 +194,4 @@ void PlaylistComponent::loadPlaylist()
 
     std::cout << "After launchAsync call." << std::endl;
 }
+
