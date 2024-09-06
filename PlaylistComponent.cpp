@@ -1,3 +1,4 @@
+
 //
 ////PlaylistComponent.cpp
 //
@@ -80,23 +81,39 @@ void PlaylistComponent::paintCell(juce::Graphics& g, int rowNumber, int columnId
 
 juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, juce::Component* existingComponentToUpdate)
 {
+    const int buttonWidth = 70;  // Set a consistent width
+    const int buttonHeight = 20; // Set a consistent height
+    const int spacing = 10;      // Space between buttons
+
     if (columnId == 2) // Deck buttons column
     {
         if (existingComponentToUpdate == nullptr)
         {
             auto* deckButtonContainer = new juce::Component();
 
+            // Create "Deck 1" button
             auto* deck1Button = new juce::TextButton{"Deck 1"};
             deck1Button->setComponentID("deck1_" + std::to_string(rowNumber));
             deck1Button->addListener(this);
-            deck1Button->setBounds(0, 0, 90, 20); // Adjust height
+            deck1Button->setSize(buttonWidth, buttonHeight);
             deckButtonContainer->addAndMakeVisible(deck1Button);
 
+            // Create "Deck 2" button
             auto* deck2Button = new juce::TextButton{"Deck 2"};
             deck2Button->setComponentID("deck2_" + std::to_string(rowNumber));
             deck2Button->addListener(this);
-            deck2Button->setBounds(100, 0, 90, 20); // Adjust height
+            deck2Button->setSize(buttonWidth, buttonHeight);
             deckButtonContainer->addAndMakeVisible(deck2Button);
+
+            // Arrange buttons in a row using FlexBox
+            juce::FlexBox flexBox;
+            flexBox.flexDirection = juce::FlexBox::Direction::row;
+            flexBox.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+            flexBox.items.add(juce::FlexItem(*deck1Button).withMinWidth(buttonWidth).withMinHeight(buttonHeight));
+            flexBox.items.add(juce::FlexItem(*deck2Button).withMinWidth(buttonWidth).withMinHeight(buttonHeight).withMargin(juce::FlexItem::Margin(0, 0, 0, spacing)));
+
+            deckButtonContainer->setBounds(0, 0, 2 * buttonWidth + spacing, buttonHeight);
+            flexBox.performLayout(deckButtonContainer->getLocalBounds());
 
             existingComponentToUpdate = deckButtonContainer;
             std::cout << "Created Deck buttons for row " << rowNumber << std::endl;
@@ -106,17 +123,36 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
     {
         if (existingComponentToUpdate == nullptr)
         {
+            // Create a container for the Remove button to ensure layout consistency
+            auto* removeButtonContainer = new juce::Component();
+
+            // Create "Remove" button
             auto* removeButton = new juce::TextButton{"Remove"};
             removeButton->setComponentID("remove_" + std::to_string(rowNumber));
             removeButton->addListener(this);
-            removeButton->setBounds(0, 0, 60, 20); // Adjust dimensions as needed
-            existingComponentToUpdate = removeButton;
+            removeButton->setSize(buttonWidth, buttonHeight);
+            removeButtonContainer->addAndMakeVisible(removeButton);
+
+            // Set bounds of the container
+            removeButtonContainer->setBounds(0, 0, buttonWidth, buttonHeight);
+
+            // Use FlexBox layout to center the button in its container
+            juce::FlexBox flexBox;
+            flexBox.flexDirection = juce::FlexBox::Direction::row;
+            flexBox.justifyContent = juce::FlexBox::JustifyContent::center;
+            flexBox.alignContent = juce::FlexBox::AlignContent::center;
+            flexBox.items.add(juce::FlexItem(*removeButton).withMinWidth(buttonWidth).withMinHeight(buttonHeight));
+            
+            flexBox.performLayout(removeButtonContainer->getLocalBounds());
+
+            existingComponentToUpdate = removeButtonContainer;
             std::cout << "Created Remove button for row " << rowNumber << std::endl;
         }
     }
 
     return existingComponentToUpdate;
 }
+
 
 void PlaylistComponent::buttonClicked(juce::Button* button)
 {
@@ -194,4 +230,3 @@ void PlaylistComponent::loadPlaylist()
 
     std::cout << "After launchAsync call." << std::endl;
 }
-
