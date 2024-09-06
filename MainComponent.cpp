@@ -10,7 +10,7 @@ MainComponent::MainComponent()
       deckGUI2(&player2, formatManager, thumbCache),
       playlistComponent(&deckGUI1, &deckGUI2)
 {
-    setSize(800, 600);
+    setSize(900, 800);
 
     // Setup the references between decks
     deckGUI1.setOtherDeck(&deckGUI2);
