@@ -1,3 +1,4 @@
+
 //
 ///*
 //  ==============================================================================
@@ -86,26 +87,30 @@ void EqualizerComponent::paint(juce::Graphics& g)
     g.setColour(juce::Colours::white);
     g.drawRect(getLocalBounds(), 1);
 
-    // Add title text
+    // Add title text "Equalizer" centered above the sliders
     g.setColour(juce::Colours::white);
     g.setFont(18.0f);
-    g.drawText("Equalizer", getLocalBounds().removeFromTop(20), juce::Justification::centredTop);
+    g.drawText("Equalizer", 0, 0, getWidth(), 30, juce::Justification::centredTop); // Adjusted placement
 }
 
 void EqualizerComponent::resized()
 {
     auto area = getLocalBounds();
+
+    // Reserve more space at the top for the "Equalizer" title
+    area.removeFromTop(40); // Increased height for the title
+
     auto sliderArea = area.removeFromLeft(area.getWidth() * 0.5);
     int sliderWidth = sliderArea.getWidth() / 7;
 
     // Position sliders on the left
-    bassSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
-    lowMidSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
-    midSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
-    highMidSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
-    trebleSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
-    presenceSlider.setBounds(sliderArea.removeFromLeft(sliderWidth));
-    brillianceSlider.setBounds(sliderArea);
+    bassSlider.setBounds(sliderArea.removeFromLeft(sliderWidth).reduced(0, 10)); // Reduced height from the top
+    lowMidSlider.setBounds(sliderArea.removeFromLeft(sliderWidth).reduced(0, 10));
+    midSlider.setBounds(sliderArea.removeFromLeft(sliderWidth).reduced(0, 10));
+    highMidSlider.setBounds(sliderArea.removeFromLeft(sliderWidth).reduced(0, 10));
+    trebleSlider.setBounds(sliderArea.removeFromLeft(sliderWidth).reduced(0, 10));
+    presenceSlider.setBounds(sliderArea.removeFromLeft(sliderWidth).reduced(0, 10));
+    brillianceSlider.setBounds(sliderArea.reduced(0, 10));
 
     // Position buttons and BPM slider on the right
     auto buttonArea = area.removeFromRight(area.getWidth());
@@ -116,6 +121,7 @@ void EqualizerComponent::resized()
     // Position preset selector below BPM slider
     presetSelector.setBounds(buttonArea.removeFromTop(30).reduced(5));
 }
+
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
 {
@@ -326,5 +332,4 @@ void EqualizerComponent::process(juce::dsp::AudioBlock<float>& audioBlock)
     presenceFilter.process(context);
     brillianceFilter.process(context);
 }
-
 
