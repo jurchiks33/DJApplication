@@ -1,5 +1,5 @@
-//
-////    PlaylistComponent.h
+
+//    PlaylistComponent.h
 
 #pragma once
 
@@ -55,6 +55,7 @@ private:
     DeckGUI* deck1;
     DeckGUI* deck2;
 
+    juce::LookAndFeel_V4 customLookAndFeel; // Add this member for custom styling
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlaylistComponent)
 };
-

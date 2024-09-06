@@ -1,4 +1,3 @@
-
 //
 ////PlaylistComponent.cpp
 //
@@ -28,6 +27,12 @@ PlaylistComponent::PlaylistComponent(DeckGUI* deck1GUI, DeckGUI* deck2GUI)
         std::cout << "Load Playlist button clicked." << std::endl;
         loadPlaylist();
     };
+
+    // Style the Load Playlist button
+    loadPlaylistButton->setColour(juce::TextButton::buttonColourId, juce::Colours::darkorange);
+    loadPlaylistButton->setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+    loadPlaylistButton->setLookAndFeel(&customLookAndFeel);
+
     addAndMakeVisible(loadPlaylistButton.get());
     std::cout << "Load Playlist button added to PlaylistComponent." << std::endl;
 }
@@ -35,24 +40,35 @@ PlaylistComponent::PlaylistComponent(DeckGUI* deck1GUI, DeckGUI* deck2GUI)
 PlaylistComponent::~PlaylistComponent()
 {
     std::cout << "Destroying PlaylistComponent..." << std::endl;
+    loadPlaylistButton->setLookAndFeel(nullptr); // Reset LookAndFeel on destruction
 }
 
 void PlaylistComponent::paint(juce::Graphics& g)
 {
-    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
-    g.setColour(juce::Colours::grey);
-    g.drawRect(getLocalBounds(), 1);
-    g.setColour(juce::Colours::white);
-    g.setFont(14.0f);
-    g.drawText("PlaylistComponent", getLocalBounds(),
-               juce::Justification::centred, true);
+    // Fancy radial gradient background
+    juce::ColourGradient gradient(juce::Colours::darkslategrey, getWidth() / 2, getHeight() / 2,
+                                  juce::Colours::black, getWidth(), getHeight(), true);
+    gradient.addColour(0.4, juce::Colours::slategrey.darker(0.2f));
+    g.setGradientFill(gradient);
+    g.fillAll();
+
+    // Decorative border
+    g.setColour(juce::Colours::whitesmoke.withAlpha(0.3f));
+    g.drawRect(getLocalBounds(), 2);
+
+    // Optional diagonal lines for added texture
+    g.setColour(juce::Colours::whitesmoke.withAlpha(0.1f));
+    for (int i = -getHeight(); i < getWidth(); i += 25)
+    {
+        g.drawLine(i, 0, i + getHeight(), getHeight(), 0.5f);
+    }
 }
 
 void PlaylistComponent::resized()
 {
     auto area = getLocalBounds();
-    tableComponent.setBounds(area.removeFromTop(getHeight() - 40)); // Adjust the bounds to fit the load button
-    loadPlaylistButton->setBounds(area);
+    tableComponent.setBounds(area.removeFromTop(getHeight() - 50)); // Adjust to fit the load button
+    loadPlaylistButton->setBounds(area.reduced(10));
     std::cout << "Resized PlaylistComponent." << std::endl;
 }
 
@@ -64,11 +80,22 @@ int PlaylistComponent::getNumRows()
 
 void PlaylistComponent::paintRowBackground(juce::Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
 {
-    g.fillAll(rowIsSelected ? juce::Colours::orange : juce::Colours::darkgrey);
+    auto baseColour = rowIsSelected ? juce::Colours::orange.withAlpha(0.4f) : juce::Colours::darkgrey.withAlpha(0.2f);
+    g.fillAll(baseColour);
+
+    // Optional: Add subtle stripes for unselected rows
+    if (!rowIsSelected)
+    {
+        g.setColour(juce::Colours::black.withAlpha(0.05f));
+        g.drawRect(0, 0, width, height, 1);
+    }
 }
 
 void PlaylistComponent::paintCell(juce::Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
+    g.setColour(rowIsSelected ? juce::Colours::black : juce::Colours::white);
+    g.setFont(14.0f);
+
     if (columnId == 1) // Track title column
     {
         g.drawText(trackTitles[rowNumber],
@@ -96,6 +123,8 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
             deck1Button->setComponentID("deck1_" + std::to_string(rowNumber));
             deck1Button->addListener(this);
             deck1Button->setSize(buttonWidth, buttonHeight);
+            deck1Button->setColour(juce::TextButton::buttonColourId, juce::Colours::steelblue);
+            deck1Button->setColour(juce::TextButton::textColourOnId, juce::Colours::white);
             deckButtonContainer->addAndMakeVisible(deck1Button);
 
             // Create "Deck 2" button
@@ -103,6 +132,8 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
             deck2Button->setComponentID("deck2_" + std::to_string(rowNumber));
             deck2Button->addListener(this);
             deck2Button->setSize(buttonWidth, buttonHeight);
+            deck2Button->setColour(juce::TextButton::buttonColourId, juce::Colours::seagreen);
+            deck2Button->setColour(juce::TextButton::textColourOnId, juce::Colours::white);
             deckButtonContainer->addAndMakeVisible(deck2Button);
 
             // Arrange buttons in a row using FlexBox
@@ -131,6 +162,8 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
             removeButton->setComponentID("remove_" + std::to_string(rowNumber));
             removeButton->addListener(this);
             removeButton->setSize(buttonWidth, buttonHeight);
+            removeButton->setColour(juce::TextButton::buttonColourId, juce::Colours::crimson);
+            removeButton->setColour(juce::TextButton::textColourOnId, juce::Colours::white);
             removeButtonContainer->addAndMakeVisible(removeButton);
 
             // Set bounds of the container
@@ -142,7 +175,7 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
             flexBox.justifyContent = juce::FlexBox::JustifyContent::center;
             flexBox.alignContent = juce::FlexBox::AlignContent::center;
             flexBox.items.add(juce::FlexItem(*removeButton).withMinWidth(buttonWidth).withMinHeight(buttonHeight));
-            
+
             flexBox.performLayout(removeButtonContainer->getLocalBounds());
 
             existingComponentToUpdate = removeButtonContainer;
@@ -152,7 +185,6 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int c
 
     return existingComponentToUpdate;
 }
-
 
 void PlaylistComponent::buttonClicked(juce::Button* button)
 {
