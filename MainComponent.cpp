@@ -1,5 +1,4 @@
 
-
 #include "MainComponent.h"
 
 //==============================================================================
@@ -92,4 +91,3 @@ void MainComponent::resized()
     // Set bounds for the Playlist component
     playlistComponent.setBounds(0, deckHeight * 2, getWidth(), deckHeight);
 }
-

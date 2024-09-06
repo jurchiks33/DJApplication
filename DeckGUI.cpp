@@ -1,3 +1,4 @@
+
 // DeckGUI.cpp
 
 #include "DeckGUI.h"
@@ -72,28 +73,15 @@ void DeckGUI::paint(juce::Graphics& g)
     g.setFont(juce::Font(14.0f));
     g.drawText("DeckGUI", getLocalBounds(), juce::Justification::centred, true);
 }
-//
-//void DeckGUI::resized()
-//{
-//    double rowH = getHeight() / 6; // Adjusted height division for 2 sliders
-//
-//    playButton.setBounds(0, 0, getWidth(), rowH);
-//    stopButton.setBounds(0, rowH, getWidth(), rowH);
-//    syncButton.setBounds(0, rowH * 2, getWidth(), rowH);
-//
-//    volSlider.setBounds(0, rowH * 3, getWidth(), rowH);
-//    posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
-//    waveformDisplay.setBounds(0, rowH * 5, getWidth(), rowH);
-//}
 
 void DeckGUI::resized()
 {
     // Define the new height and width for the buttons
-    int buttonHeight = getHeight() / 7;  // Adjust the button height proportionally
+    int buttonHeight = getHeight() / 8;  // Adjust the button height proportionally
     int buttonWidth = getWidth();        // Full width of the component
 
     // Add padding space for positioning
-    int padding = 10;  // Space between elements
+    int padding = 1;  // Space between elements
 
     // Position the buttons with the new dimensions
     playButton.setBounds(padding, padding, buttonWidth - 2 * padding, buttonHeight - padding);  // Adjusted size and padding
@@ -107,10 +95,13 @@ void DeckGUI::resized()
     volSlider.setBounds(padding, syncButton.getBottom() + extraSpace, buttonWidth - 2 * padding, buttonHeight);
     posSlider.setBounds(padding, volSlider.getBottom() + padding, buttonWidth - 2 * padding, buttonHeight);
 
-    // Position waveform display below sliders
-    waveformDisplay.setBounds(padding, posSlider.getBottom() + padding, buttonWidth - 2 * padding, getHeight() - posSlider.getBottom() - 2 * padding);
-}
+    // Increase the height of the waveform display and add additional space to move it down
+    int waveformHeight = buttonHeight * 2;  // Increase height as desired
+    int waveformYOffset = 10; // Set the offset value in pixels (about 1 cm depending on screen DPI)
 
+    // Position waveform display below sliders with additional offset
+    waveformDisplay.setBounds(padding, posSlider.getBottom() + padding + waveformYOffset, buttonWidth - 2 * padding, waveformHeight);
+}
 
 
 void DeckGUI::buttonClicked(juce::Button* button)
@@ -200,4 +191,3 @@ void DeckGUI::loadTrack(const juce::URL& audioURL)
     player->loadURL(audioURL);
     waveformDisplay.loadURL(audioURL);
 }
-
