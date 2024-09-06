@@ -1,11 +1,12 @@
+//
+///*
+//  ==============================================================================
+//
+//    EqualizerComponent.cpp
+//
+//  ==============================================================================
+//*/
 
-/*
-  ==============================================================================
-
-    EqualizerComponent.cpp
-
-  ==============================================================================
-*/
 
 #include "EqualizerComponent.h"
 #include "DjAudioPlayer.h"
@@ -14,7 +15,8 @@
 EqualizerComponent::EqualizerComponent(DJAudioPlayer& playerRef)
     : player(playerRef), // Initialize the player reference
       bypassButton("Bypass"), resetButton("Reset"),
-      rockPresetButton("Rock"), jazzPresetButton("Jazz"), classicalPresetButton("Classical") // Initialize preset buttons
+      rockPresetButton("Rock"), jazzPresetButton("Jazz"), classicalPresetButton("Classical"), // Initialize preset buttons
+      presetSelector()  // Initialize presetSelector
 {
     // Setup sliders for EQ bands
     setupSlider(bassSlider, "Bass (60 Hz)");
@@ -24,6 +26,15 @@ EqualizerComponent::EqualizerComponent(DJAudioPlayer& playerRef)
     setupSlider(trebleSlider, "Treble (2 kHz)");
     setupSlider(presenceSlider, "Presence (4 kHz)");
     setupSlider(brillianceSlider, "Brilliance (8 kHz)");
+
+    // Add labels to sliders
+    addLabelForSlider(bassSlider, "Bass");
+    addLabelForSlider(lowMidSlider, "Low-Mid");
+    addLabelForSlider(midSlider, "Mid");
+    addLabelForSlider(highMidSlider, "High-Mid");
+    addLabelForSlider(trebleSlider, "Treble");
+    addLabelForSlider(presenceSlider, "Presence");
+    addLabelForSlider(brillianceSlider, "Brilliance");
 
     // Setup bypass and reset buttons
     bypassButton.setClickingTogglesState(true);
@@ -46,26 +57,39 @@ EqualizerComponent::EqualizerComponent(DJAudioPlayer& playerRef)
     bpmSlider.setName("BPM");
     addAndMakeVisible(bpmSlider);
 
-    // Setup preset buttons
-    rockPresetButton.addListener(this);
-    jazzPresetButton.addListener(this);
-    classicalPresetButton.addListener(this);
-
-    addAndMakeVisible(rockPresetButton);
-    addAndMakeVisible(jazzPresetButton);
-    addAndMakeVisible(classicalPresetButton);
+    // Setup preset selector
+    setupPresetSelector();
 
     initializeFilters();
 }
 
 EqualizerComponent::~EqualizerComponent() = default;
 
+void EqualizerComponent::comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged)
+{
+    if (comboBoxThatHasChanged == &presetSelector)
+    {
+        // Apply the selected preset
+        applyPreset(presetSelector.getSelectedId() - 1);
+    }
+}
+
 void EqualizerComponent::paint(juce::Graphics& g)
 {
-    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+    // Create a vertical gradient background
+    juce::ColourGradient gradient(juce::Colours::darkgrey, getLocalBounds().toFloat().getTopLeft(),
+                                  juce::Colours::black, getLocalBounds().toFloat().getBottomLeft(), false);
+    g.setGradientFill(gradient);
+    g.fillAll();
+
+    // Add a border
     g.setColour(juce::Colours::white);
-    g.setFont(14.0f);
-    g.drawText("Equalizer", getLocalBounds(), juce::Justification::centredTop, true);
+    g.drawRect(getLocalBounds(), 1);
+
+    // Add title text
+    g.setColour(juce::Colours::white);
+    g.setFont(18.0f);
+    g.drawText("Equalizer", getLocalBounds().removeFromTop(20), juce::Justification::centredTop);
 }
 
 void EqualizerComponent::resized()
@@ -89,10 +113,8 @@ void EqualizerComponent::resized()
     resetButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
     bpmSlider.setBounds(buttonArea.removeFromTop(60).reduced(10));
 
-    // Position preset buttons below BPM slider
-    rockPresetButton.setBounds(buttonArea.removeFromTop(30).reduced(5));
-    jazzPresetButton.setBounds(buttonArea.removeFromTop(30).reduced(5));
-    classicalPresetButton.setBounds(buttonArea.removeFromTop(30).reduced(5));
+    // Position preset selector below BPM slider
+    presetSelector.setBounds(buttonArea.removeFromTop(30).reduced(5));
 }
 
 void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
@@ -136,6 +158,7 @@ void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
     }
 }
 
+
 void EqualizerComponent::buttonClicked(juce::Button* button)
 {
     if (button == &bypassButton)
@@ -147,6 +170,7 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
     }
     else if (button == &resetButton)
     {
+        // Reset all sliders to neutral (0.0) values
         bassSlider.setValue(0.0);
         lowMidSlider.setValue(0.0);
         midSlider.setValue(0.0);
@@ -155,27 +179,27 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
         presenceSlider.setValue(0.0);
         brillianceSlider.setValue(0.0);
         bpmSlider.setValue(120.0);
+        presetSelector.setSelectedId(1); // Set preset to Neutral
         std::cout << "EQ Reset to default" << std::endl;
     }
-    else if (button == &rockPresetButton)
-    {
-        applyPreset(0); // Apply Rock preset
-    }
-    else if (button == &jazzPresetButton)
-    {
-        applyPreset(1); // Apply Jazz preset
-    }
-    else if (button == &classicalPresetButton)
-    {
-        applyPreset(2); // Apply Classical preset
-    }
 }
+
 
 void EqualizerComponent::applyPreset(int presetType)
 {
     switch (presetType)
     {
-        case 0: // Rock Preset
+        case 0: // Neutral Preset
+            bassSlider.setValue(0.0);
+            lowMidSlider.setValue(0.0);
+            midSlider.setValue(0.0);
+            highMidSlider.setValue(0.0);
+            trebleSlider.setValue(0.0);
+            presenceSlider.setValue(0.0);
+            brillianceSlider.setValue(0.0);
+            break;
+
+        case 1: // Rock Preset
             bassSlider.setValue(6.0);
             lowMidSlider.setValue(4.0);
             midSlider.setValue(-2.0);
@@ -185,7 +209,7 @@ void EqualizerComponent::applyPreset(int presetType)
             brillianceSlider.setValue(4.0);
             break;
 
-        case 1: // Jazz Preset
+        case 2: // Jazz Preset
             bassSlider.setValue(2.0);
             lowMidSlider.setValue(1.0);
             midSlider.setValue(0.0);
@@ -195,7 +219,7 @@ void EqualizerComponent::applyPreset(int presetType)
             brillianceSlider.setValue(6.0);
             break;
 
-        case 2: // Classical Preset
+        case 3: // Classical Preset
             bassSlider.setValue(0.0);
             lowMidSlider.setValue(0.0);
             midSlider.setValue(1.0);
@@ -208,8 +232,9 @@ void EqualizerComponent::applyPreset(int presetType)
         default:
             break;
     }
-    std::cout << "Preset applied: " << (presetType == 0 ? "Rock" : presetType == 1 ? "Jazz" : "Classical") << std::endl;
+    std::cout << "Preset applied: " << (presetType == 0 ? "Neutral" : presetType == 1 ? "Rock" : presetType == 2 ? "Jazz" : "Classical") << std::endl;
 }
+
 
 void EqualizerComponent::setupSlider(juce::Slider& slider, const juce::String& name)
 {
@@ -219,7 +244,34 @@ void EqualizerComponent::setupSlider(juce::Slider& slider, const juce::String& n
     slider.setValue(0.0);
     slider.setName(name);
     slider.addListener(this);
+
+    // Set custom colors for the sliders
+    slider.setColour(juce::Slider::thumbColourId, juce::Colours::aqua);
+    slider.setColour(juce::Slider::trackColourId, juce::Colours::darkgrey);
+    slider.setColour(juce::Slider::backgroundColourId, juce::Colours::black);
+
     addAndMakeVisible(slider);
+}
+
+void EqualizerComponent::addLabelForSlider(juce::Slider& slider, const juce::String& labelText)
+{
+    auto* label = new juce::Label();
+    label->setText(labelText, juce::dontSendNotification);
+    label->attachToComponent(&slider, false);
+    label->setJustificationType(juce::Justification::centredTop);
+    label->setColour(juce::Label::textColourId, juce::Colours::lightgrey);
+    addAndMakeVisible(label);
+}
+
+void EqualizerComponent::setupPresetSelector()
+{
+    presetSelector.addItem("Neutral", 1);  // Add Neutral preset
+    presetSelector.addItem("Rock", 2);
+    presetSelector.addItem("Jazz", 3);
+    presetSelector.addItem("Classical", 4);
+    presetSelector.setSelectedId(1);  // Set Neutral as the default
+    presetSelector.addListener(this); // Register the listener
+    addAndMakeVisible(presetSelector);
 }
 
 void EqualizerComponent::initializeFilters()
@@ -270,8 +322,9 @@ void EqualizerComponent::process(juce::dsp::AudioBlock<float>& audioBlock)
     bassFilter.process(context);
     lowMidFilter.process(context);
     midFilter.process(context);
-    highMidFilter.process(context);
     trebleFilter.process(context);
     presenceFilter.process(context);
     brillianceFilter.process(context);
 }
+
+

@@ -1,11 +1,11 @@
-
-//*
-//  ==============================================================================
 //
-//    EqualizerComponent.h
-//
-//  ==============================================================================
-//*/
+////*
+////  ==============================================================================
+////
+////    EqualizerComponent.h
+////
+////  ==============================================================================
+////*/
 
 #pragma once
 
@@ -16,7 +16,8 @@ class DJAudioPlayer;  // Forward declaration to avoid circular dependencies
 
 class EqualizerComponent : public juce::Component,
                            public juce::Slider::Listener,
-                           public juce::Button::Listener
+                           public juce::Button::Listener,
+                           public juce::ComboBox::Listener  // Add this to handle ComboBox
 {
 public:
     EqualizerComponent(DJAudioPlayer& player);
@@ -27,12 +28,15 @@ public:
 
     void sliderValueChanged(juce::Slider* slider) override;
     void buttonClicked(juce::Button* button) override;
+    void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override; // For ComboBox listener
 
     void process(juce::dsp::AudioBlock<float>& audioBlock);
 
 private:
     void updateBypassButtonColor();
     void setupSlider(juce::Slider& slider, const juce::String& name);
+    void addLabelForSlider(juce::Slider& slider, const juce::String& labelText);  // Add this function declaration
+    void setupPresetSelector();  // Add this function declaration
     void initializeFilters();
     void updateFilter(juce::dsp::IIR::Filter<float>& filter, const juce::dsp::IIR::Coefficients<float>::Ptr& coefficients);
     void applyPreset(int presetType);
@@ -56,6 +60,9 @@ private:
     juce::TextButton jazzPresetButton;
     juce::TextButton classicalPresetButton;
 
+    // Preset Selector
+    juce::ComboBox presetSelector;  // Add this member
+
     // Filters
     juce::dsp::IIR::Filter<float> bassFilter;
     juce::dsp::IIR::Filter<float> lowMidFilter;
@@ -69,3 +76,4 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EqualizerComponent)
 };
+
