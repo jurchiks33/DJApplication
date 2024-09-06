@@ -1,4 +1,5 @@
 
+
 // DeckGUI.cpp
 
 #include "DeckGUI.h"
@@ -66,12 +67,31 @@ DeckGUI::~DeckGUI()
 
 void DeckGUI::paint(juce::Graphics& g)
 {
-    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
-    g.setColour(juce::Colours::grey);
+    // Create a gradient background
+    juce::ColourGradient gradient(juce::Colours::darkslateblue,
+                                  0, 0,
+                                  juce::Colours::midnightblue,
+                                  getWidth(), getHeight(),
+                                  false);
+
+    // Fill the background with the gradient
+    g.setGradientFill(gradient);
+    g.fillAll();
+
+    // Optional: Add a border with a subtle shadow effect
+    g.setColour(juce::Colours::black.withAlpha(0.6f));
     g.drawRect(getLocalBounds(), 1);
-    g.setColour(juce::Colours::white);
-    g.setFont(juce::Font(14.0f));
-    g.drawText("DeckGUI", getLocalBounds(), juce::Justification::centred, true);
+
+    // Optional: Add a drop shadow effect
+    juce::DropShadow shadow(juce::Colours::black.withAlpha(0.3f), 10, {0, 2});
+    shadow.drawForRectangle(g, getLocalBounds().reduced(2));
+
+    // Optional: Add a stylish outline or pattern if desired
+    g.setColour(juce::Colours::whitesmoke.withAlpha(0.2f));
+    for (int i = 0; i < getWidth(); i += 20)
+    {
+        g.drawLine(i, 0, i, getHeight(), 0.5f);
+    }
 }
 
 void DeckGUI::resized()
@@ -102,7 +122,6 @@ void DeckGUI::resized()
     // Position waveform display below sliders with additional offset
     waveformDisplay.setBounds(padding, posSlider.getBottom() + padding + waveformYOffset, buttonWidth - 2 * padding, waveformHeight);
 }
-
 
 void DeckGUI::buttonClicked(juce::Button* button)
 {
