@@ -1,4 +1,3 @@
-
 // DeckGUI.cpp
 
 #include "DeckGUI.h"
@@ -26,7 +25,6 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
 
     // Add sliders and waveform display
     addAndMakeVisible(volSlider);
-    addAndMakeVisible(speedSlider);
     addAndMakeVisible(posSlider);
     addAndMakeVisible(waveformDisplay);
     
@@ -37,14 +35,26 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
 
     // Add slider listeners
     volSlider.addListener(this);
-    speedSlider.addListener(this);
     posSlider.addListener(this);
 
     // Set slider ranges
     volSlider.setRange(0.0, 1.0);
-    speedSlider.setRange(0.0, 100.0);
     posSlider.setRange(0.0, 1.0);
     
+    // Set initial values
+    volSlider.setValue(1.0); // Start with volume at 1 (full volume)
+    
+    // Style sliders
+    volSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+    volSlider.setColour(juce::Slider::thumbColourId, juce::Colours::aqua);
+    volSlider.setColour(juce::Slider::trackColourId, juce::Colours::darkgrey);
+    volSlider.setColour(juce::Slider::backgroundColourId, juce::Colours::black);
+
+    posSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+    posSlider.setColour(juce::Slider::thumbColourId, juce::Colours::lightblue);
+    posSlider.setColour(juce::Slider::trackColourId, juce::Colours::darkgrey);
+    posSlider.setColour(juce::Slider::backgroundColourId, juce::Colours::black);
+
     startTimer(500);
 }
 
@@ -62,19 +72,46 @@ void DeckGUI::paint(juce::Graphics& g)
     g.setFont(juce::Font(14.0f));
     g.drawText("DeckGUI", getLocalBounds(), juce::Justification::centred, true);
 }
+//
+//void DeckGUI::resized()
+//{
+//    double rowH = getHeight() / 6; // Adjusted height division for 2 sliders
+//
+//    playButton.setBounds(0, 0, getWidth(), rowH);
+//    stopButton.setBounds(0, rowH, getWidth(), rowH);
+//    syncButton.setBounds(0, rowH * 2, getWidth(), rowH);
+//
+//    volSlider.setBounds(0, rowH * 3, getWidth(), rowH);
+//    posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
+//    waveformDisplay.setBounds(0, rowH * 5, getWidth(), rowH);
+//}
 
 void DeckGUI::resized()
 {
-    double rowH = getHeight() / 8;
-    playButton.setBounds(0, 0, getWidth(), rowH);
-    stopButton.setBounds(0, rowH, getWidth(), rowH);
-    syncButton.setBounds(0, rowH * 2, getWidth(), rowH);
+    // Define the new height and width for the buttons
+    int buttonHeight = getHeight() / 7;  // Adjust the button height proportionally
+    int buttonWidth = getWidth();        // Full width of the component
 
-    volSlider.setBounds(0, rowH * 3, getWidth(), rowH);
-    speedSlider.setBounds(0, rowH * 4, getWidth(), rowH);
-    posSlider.setBounds(0, rowH * 5, getWidth(), rowH);
-    waveformDisplay.setBounds(0, rowH * 6, getWidth(), rowH * 2);
+    // Add padding space for positioning
+    int padding = 10;  // Space between elements
+
+    // Position the buttons with the new dimensions
+    playButton.setBounds(padding, padding, buttonWidth - 2 * padding, buttonHeight - padding);  // Adjusted size and padding
+    stopButton.setBounds(padding, playButton.getBottom() + padding, buttonWidth - 2 * padding, buttonHeight - padding);
+    syncButton.setBounds(padding, stopButton.getBottom() + padding, buttonWidth - 2 * padding, buttonHeight - padding);
+
+    // Extra space below SYNC button
+    int extraSpace = 20;
+
+    // Position sliders below buttons with extra space
+    volSlider.setBounds(padding, syncButton.getBottom() + extraSpace, buttonWidth - 2 * padding, buttonHeight);
+    posSlider.setBounds(padding, volSlider.getBottom() + padding, buttonWidth - 2 * padding, buttonHeight);
+
+    // Position waveform display below sliders
+    waveformDisplay.setBounds(padding, posSlider.getBottom() + padding, buttonWidth - 2 * padding, getHeight() - posSlider.getBottom() - 2 * padding);
 }
+
+
 
 void DeckGUI::buttonClicked(juce::Button* button)
 {
@@ -113,10 +150,6 @@ void DeckGUI::sliderValueChanged(juce::Slider* slider)
         double gainValue = slider->getValue();
         player->setGain(gainValue);
         std::cout << "Volume slider set to: " << gainValue << std::endl;
-    }
-    else if (slider == &speedSlider)
-    {
-        player->setSpeed(slider->getValue());
     }
     else if (slider == &posSlider)
     {

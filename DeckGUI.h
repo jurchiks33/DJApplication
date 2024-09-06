@@ -38,7 +38,8 @@ public:
 
     // Getter for the player's BPM
     double getPlayerBPM() const { return player->getBPM(); }
-    // Add a getter for the player's position if needed
+    
+    // Getter for the player's position
     double getPlayerPosition() const { return player->getPositionRelative(); }
 
 private:
@@ -46,9 +47,8 @@ private:
     juce::TextButton stopButton{"STOP"};
     juce::TextButton syncButton{"SYNC"};
     
-    juce::Slider volSlider;
-    juce::Slider speedSlider;
-    juce::Slider posSlider;
+    juce::Slider volSlider;  // Volume slider
+    juce::Slider posSlider;  // Position slider
 
     DJAudioPlayer* player;
     
@@ -58,5 +58,4 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)
 };
-
 
