@@ -1,26 +1,35 @@
-
+/*
+===============================================================================
 //DjAudioPlayer.cpp
+===============================================================================
+*/
+
+
 
 #include "DjAudioPlayer.h"
-#include "EqualizerComponent.h"  // Include EqualizerComponent here
+#include "EqualizerComponent.h"
 #include <JuceHeader.h>
-// Ensure all JUCE headers are included
 
-DJAudioPlayer::DJAudioPlayer(juce::AudioFormatManager& formatManager, EqualizerComponent& eqComponent)
+// constructor for initializations
+DJAudioPlayer::DJAudioPlayer(juce::AudioFormatManager& formatManager,
+                             EqualizerComponent& eqComponent) 
 : formatManager(formatManager), equalizerComponent(eqComponent)
 {
 }
 
+// destructor
 DJAudioPlayer::~DJAudioPlayer()
 {
 }
 
+// prepare audio player for playback
 void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-    transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
-    resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);  // prepare transportsource for playback
+    resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);   // prepare resamplesource for playback
 }
 
+// get next audioblock of data to be played
 void DJAudioPlayer::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     resampleSource.getNextAudioBlock(bufferToFill);
@@ -29,13 +38,14 @@ void DJAudioPlayer::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
     equalizerComponent.process(block);
 }
 
-
+// release any resources held by audio sources
 void DJAudioPlayer::releaseResources()
 {
     transportSource.releaseResources();
     resampleSource.releaseResources();
 }
 
+// loads audio file from URL into a player
 void DJAudioPlayer::loadURL(juce::URL audioURL)
 {
     juce::URL::InputStreamOptions options(juce::URL::ParameterHandling::inPostData);
@@ -65,7 +75,7 @@ void DJAudioPlayer::loadURL(juce::URL audioURL)
     }
 }
 
-
+// sets playback volume for the player
 void DJAudioPlayer::setGain(double gain)
 {
     if (gain < 0 || gain > 1.0)
@@ -77,6 +87,7 @@ void DJAudioPlayer::setGain(double gain)
     }
 }
 
+// sets playback speed for audio
 void DJAudioPlayer::setSpeed(double ratio)
 {
     if (ratio <= 0)
@@ -85,7 +96,6 @@ void DJAudioPlayer::setSpeed(double ratio)
         return;
     }
 
-    // Example: Constrain speed ratio between reasonable limits (e.g., 0.5x to 2.0x)
     ratio = juce::jlimit(0.5, 2.0, ratio);
 
     // Set the resampling ratio for speed adjustment
@@ -93,12 +103,13 @@ void DJAudioPlayer::setSpeed(double ratio)
     std::cout << "Set speed ratio to: " << ratio << std::endl;
 }
 
-
+// sets playback position in seconds
 void DJAudioPlayer::setPosition(double posInSec)
 {
     transportSource.setPosition(posInSec);
 }
 
+// sets playback position relative to total audio file lenght
 void DJAudioPlayer::setPositionRelative(double pos)
 {
     if (pos < 0 || pos > 1.0)
@@ -111,26 +122,30 @@ void DJAudioPlayer::setPositionRelative(double pos)
     }
 }
 
+// starts audio playback
 void DJAudioPlayer::start()
 {
     transportSource.start();
 }
 
+// stops audio playback
 void DJAudioPlayer::stop()
 {
     transportSource.stop();
 }
 
+// gets current playback position between 0.0 and 1.0
 double DJAudioPlayer::getPositionRelative()
 {
     return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
 }
 
+// sets BPM (Beats per minute) for the player and ensures they are positive
 void DJAudioPlayer::setBPM(double newBPM)
 {
     if (newBPM > 0)
     {
-        bpm = newBPM;
+        bpm = newBPM;   // sets BPM
         std::cout << "BPM set to " << bpm << std::endl;
     }
     else
@@ -139,11 +154,13 @@ void DJAudioPlayer::setBPM(double newBPM)
     }
 }
 
+// gets current bpm from the player
 double DJAudioPlayer::getBPM() const
 {
-    return bpm;
+    return bpm; // returns current bpm
 }
 
+// adjusts playback speed to match reference bpm
 void DJAudioPlayer::syncBPM()
 {
     double referenceBPM = 120.0;
