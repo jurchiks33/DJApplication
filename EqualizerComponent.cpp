@@ -1,12 +1,6 @@
 
-//
-///*
-//  ==============================================================================
-//
 //    EqualizerComponent.cpp
-//
-//  ==============================================================================
-//*/
+
 
 
 #include "EqualizerComponent.h"
@@ -15,9 +9,12 @@
 
 EqualizerComponent::EqualizerComponent(DJAudioPlayer& playerRef)
     : player(playerRef), // Initialize the player reference
-      bypassButton("Bypass"), resetButton("Reset"),
-      rockPresetButton("Rock"), jazzPresetButton("Jazz"), classicalPresetButton("Classical"), // Initialize preset buttons
-      presetSelector()  // Initialize presetSelector
+    bypassButton("Bypass"),
+    resetButton("Reset"),
+    rockPresetButton("Rock"),
+    jazzPresetButton("Jazz"),
+    classicalPresetButton("Classical"), // Initialize preset buttons
+    presetSelector()  // Initialize presetSelector
 {
     // Setup sliders for EQ bands
     setupSlider(bassSlider, "Bass (60 Hz)");
@@ -45,7 +42,8 @@ EqualizerComponent::EqualizerComponent(DJAudioPlayer& playerRef)
     updateBypassButtonColor();
 
     resetButton.setButtonText("Reset");
-    resetButton.setColour(juce::TextButton::buttonColourId, juce::Colours::lightcoral);
+    resetButton.setColour(juce::TextButton::buttonColourId, 
+                          juce::Colours::lightcoral);
     resetButton.addListener(this);
     addAndMakeVisible(resetButton);
 
@@ -129,31 +127,38 @@ void EqualizerComponent::sliderValueChanged(juce::Slider* slider)
 
     if (slider == &bassSlider)
     {
-        updateFilter(bassFilter, juce::dsp::IIR::Coefficients<float>::makeLowShelf(sampleRate, 60.0f, 0.707f, juce::Decibels::decibelsToGain(bassSlider.getValue())));
+        updateFilter(bassFilter, juce::dsp::IIR::Coefficients<float>::makeLowShelf(sampleRate, 60.0f, 0.707f, 
+                                                                                   juce::Decibels::decibelsToGain(bassSlider.getValue())));
     }
     else if (slider == &lowMidSlider)
     {
-        updateFilter(lowMidFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 250.0f, 0.707f, juce::Decibels::decibelsToGain(lowMidSlider.getValue())));
+        updateFilter(lowMidFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 250.0f, 0.707f, 
+                                                                                       juce::Decibels::decibelsToGain(lowMidSlider.getValue())));
     }
     else if (slider == &midSlider)
     {
-        updateFilter(midFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 500.0f, 0.707f, juce::Decibels::decibelsToGain(midSlider.getValue())));
+        updateFilter(midFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 500.0f, 0.707f, 
+                                                                                    juce::Decibels::decibelsToGain(midSlider.getValue())));
     }
     else if (slider == &highMidSlider)
     {
-        updateFilter(highMidFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(highMidSlider.getValue())));
+        updateFilter(highMidFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 1000.0f, 0.707f, 
+                                                                                        juce::Decibels::decibelsToGain(highMidSlider.getValue())));
     }
     else if (slider == &trebleSlider)
     {
-        updateFilter(trebleFilter, juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(trebleSlider.getValue())));
+        updateFilter(trebleFilter, juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 2000.0f, 0.707f, 
+                                                                                      juce::Decibels::decibelsToGain(trebleSlider.getValue())));
     }
     else if (slider == &presenceSlider)
     {
-        updateFilter(presenceFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(presenceSlider.getValue())));
+        updateFilter(presenceFilter, juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 4000.0f, 0.707f, 
+                                                                                         juce::Decibels::decibelsToGain(presenceSlider.getValue())));
     }
     else if (slider == &brillianceSlider)
     {
-        updateFilter(brillianceFilter, juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(brillianceSlider.getValue())));
+        updateFilter(brillianceFilter, juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 8000.0f, 0.707f, 
+                                                                                          juce::Decibels::decibelsToGain(brillianceSlider.getValue())));
     }
     else if (slider == &bpmSlider) // Handle BPM slider changes
     {
@@ -189,7 +194,6 @@ void EqualizerComponent::buttonClicked(juce::Button* button)
         std::cout << "EQ Reset to default" << std::endl;
     }
 }
-
 
 void EqualizerComponent::applyPreset(int presetType)
 {
@@ -238,7 +242,10 @@ void EqualizerComponent::applyPreset(int presetType)
         default:
             break;
     }
-    std::cout << "Preset applied: " << (presetType == 0 ? "Neutral" : presetType == 1 ? "Rock" : presetType == 2 ? "Jazz" : "Classical") << std::endl;
+    std::cout << "Preset applied: " << (presetType == 0 ? "Neutral" : 
+                                        presetType == 1 ? "Rock" :
+                                        presetType == 2 ? "Jazz" :
+                                        "Classical") << std::endl;
 }
 
 
@@ -252,9 +259,12 @@ void EqualizerComponent::setupSlider(juce::Slider& slider, const juce::String& n
     slider.addListener(this);
 
     // Set custom colors for the sliders
-    slider.setColour(juce::Slider::thumbColourId, juce::Colours::aqua);
-    slider.setColour(juce::Slider::trackColourId, juce::Colours::darkgrey);
-    slider.setColour(juce::Slider::backgroundColourId, juce::Colours::black);
+    slider.setColour(juce::Slider::thumbColourId, 
+                     juce::Colours::aqua);
+    slider.setColour(juce::Slider::trackColourId, 
+                     juce::Colours::darkgrey);
+    slider.setColour(juce::Slider::backgroundColourId, 
+                     juce::Colours::black);
 
     addAndMakeVisible(slider);
 }
@@ -282,13 +292,27 @@ void EqualizerComponent::setupPresetSelector()
 
 void EqualizerComponent::initializeFilters()
 {
-    bassFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(44100, 100.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    lowMidFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 250.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    midFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 500.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    highMidFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 1000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    trebleFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 2000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    presenceFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 4000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
-    brillianceFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(44100, 8000.0f, 0.707f, juce::Decibels::decibelsToGain(0.0f));
+    bassFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf
+                              (44100, 100.0f, 0.707f,
+                              juce::Decibels::decibelsToGain(0.0f));
+    lowMidFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter
+                                (44100, 250.0f, 0.707f,
+                                juce::Decibels::decibelsToGain(0.0f));
+    midFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter
+                             (44100, 500.0f, 0.707f,
+                             juce::Decibels::decibelsToGain(0.0f));
+    highMidFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter
+                                 (44100, 1000.0f, 0.707f,
+                                 juce::Decibels::decibelsToGain(0.0f));
+    trebleFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf
+                                (44100, 2000.0f, 0.707f, 
+                                juce::Decibels::decibelsToGain(0.0f));
+    presenceFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter
+                                  (44100, 4000.0f, 0.707f, 
+                                  juce::Decibels::decibelsToGain(0.0f));
+    brillianceFilter.coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf
+                                    (44100, 8000.0f, 0.707f, 
+                                    juce::Decibels::decibelsToGain(0.0f));
 }
 
 void EqualizerComponent::updateFilter(juce::dsp::IIR::Filter<float>& filter, const juce::dsp::IIR::Coefficients<float>::Ptr& coefficients)
@@ -303,13 +327,17 @@ void EqualizerComponent::updateBypassButtonColor()
 {
     if (isBypassed)
     {
-        bypassButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::lightcoral);
-        bypassButton.setColour(juce::TextButton::buttonColourId, juce::Colours::lightcoral);
+        bypassButton.setColour(juce::TextButton::buttonOnColourId, 
+                               juce::Colours::lightcoral);
+        bypassButton.setColour(juce::TextButton::buttonColourId, 
+                               juce::Colours::lightcoral);
     }
     else
     {
-        bypassButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::lightgreen);
-        bypassButton.setColour(juce::TextButton::buttonColourId, juce::Colours::lightgreen);
+        bypassButton.setColour(juce::TextButton::buttonOnColourId, 
+                               juce::Colours::lightgreen);
+        bypassButton.setColour(juce::TextButton::buttonColourId, 
+                               juce::Colours::lightgreen);
     }
     
     bypassButton.repaint();
