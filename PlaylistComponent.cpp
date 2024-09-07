@@ -1,6 +1,8 @@
-//
-////PlaylistComponent.cpp
-//
+/*
+========================================================================
+//PlaylistComponent.cpp
+========================================================================
+*/
 
 #include <JuceHeader.h>
 #include "PlaylistComponent.h"
