@@ -1,3 +1,8 @@
+/*
+=====================================================================================================================
+// MainComponent.cpp
+=====================================================================================================================
+ */
 
 #include "MainComponent.h"
 
@@ -9,7 +14,7 @@ MainComponent::MainComponent()
       deckGUI2(&player2, formatManager, thumbCache),
       playlistComponent(&deckGUI1, &deckGUI2)
 {
-    setSize(900, 800);
+    setSize(900, 800);  // setting size of initial window for application
 
     // Setup the references between decks
     deckGUI1.setOtherDeck(&deckGUI2);
@@ -28,9 +33,9 @@ MainComponent::MainComponent()
     }
 
     // Add components to the visible area
-    addAndMakeVisible(deckGUI1);
-    addAndMakeVisible(deckGUI2);
-    addAndMakeVisible(playlistComponent);
+    addAndMakeVisible(deckGUI1);            // display first deck GUI
+    addAndMakeVisible(deckGUI2);            // display second deck GUI
+    addAndMakeVisible(playlistComponent);   // display playlist component
     addAndMakeVisible(equalizerComponent1); // Add the first EqualizerComponent
     addAndMakeVisible(equalizerComponent2); // Add the second EqualizerComponent
 
@@ -71,7 +76,7 @@ void MainComponent::releaseResources()
 
 void MainComponent::paint(juce::Graphics& g)
 {
-    // Fill background with the look and feel color
+    // Fill background with the default color set
     g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 }
 
