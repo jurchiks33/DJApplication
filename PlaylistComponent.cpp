@@ -132,7 +132,10 @@ void PlaylistComponent::paintCell(juce::Graphics& g,
 }
 
 // refreshes components for cells and adds buttons for specific columns
-juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, juce::Component* existingComponentToUpdate)
+juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber, 
+                                                            int columnId,
+                                                            bool isRowSelected,
+                                                            juce::Component* existingComponentToUpdate)
 {
     const int buttonWidth = 70;  // Set a consistent width
     const int buttonHeight = 20; // Set a consistent height
