@@ -91,7 +91,11 @@ int PlaylistComponent::getNumRows()
 }
 
 // styling for row background in each table
-void PlaylistComponent::paintRowBackground(juce::Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
+void PlaylistComponent::paintRowBackground(juce::Graphics& g, 
+                                           int rowNumber,
+                                           int width,
+                                           int height,
+                                           bool rowIsSelected)
 {
     auto baseColour = rowIsSelected ? juce::Colours::orange.withAlpha(0.4f) :
                                       juce::Colours::darkgrey.withAlpha(0.2f);
@@ -106,7 +110,12 @@ void PlaylistComponent::paintRowBackground(juce::Graphics& g, int rowNumber, int
 }
 
 // painting of the content of each cell in the table
-void PlaylistComponent::paintCell(juce::Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
+void PlaylistComponent::paintCell(juce::Graphics& g, 
+                                  int rowNumber,
+                                  int columnId,
+                                  int width,
+                                  int height,
+                                  bool rowIsSelected)
 {
     g.setColour(rowIsSelected ? juce::Colours::black : 
                                 juce::Colours::white);
